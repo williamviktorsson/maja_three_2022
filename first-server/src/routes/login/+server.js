@@ -3,7 +3,6 @@ import { serialize } from 'cookie';
 
 import * as database from '$lib/database.js';
 
-
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function POST({ request, setHeaders }) {
     const req = await request.json();

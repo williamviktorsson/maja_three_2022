@@ -22,4 +22,7 @@
         <p>{errors.test}</p>
     {/if}
     <button>CLICK ME</button>
+    {#if errors?.kalle}
+        <p>{errors.kalle}</p>
+    {/if}
 </form>

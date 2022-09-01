@@ -18,11 +18,8 @@
 </p>
 
 <form method="POST">
-    {#if errors?.test}
-        <p>{errors.test}</p>
-    {/if}
     <button>CLICK ME</button>
-    {#if errors?.kalle}
-        <p>{errors.kalle}</p>
+    {#if errors?.password}
+        <p>{errors.password}</p>
     {/if}
 </form>

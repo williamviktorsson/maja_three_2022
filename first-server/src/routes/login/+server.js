@@ -13,6 +13,12 @@ export async function POST({ request, setHeaders }) {
 
     // check if a user exists in db where username and password matches
 
+    // Check that password and username exists
+
+    // check that password and username matches a user and password in database
+
+    // if success, set login session token.
+
     const body = { "login - post": "123" }
 
     if (false) {
@@ -41,6 +47,9 @@ export async function POST({ request, setHeaders }) {
 export async function DELETE({ setHeaders }) {
 
     const body = { "login - delete": "123" }
+
+    // DELETE to login means logout
+    // Remove session token if it exists.
 
     setHeaders({
         'set-cookie': serialize('token', "", {

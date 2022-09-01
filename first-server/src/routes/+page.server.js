@@ -9,6 +9,9 @@ import * as state from '$lib/state';
 export function load() {
     return {
         number: state.number,
+        kalle: "urban",
+        elof: "sinan 123",
+        sixten: [123,456]
     };
 }
 
@@ -28,7 +31,8 @@ export async function POST() {
     return {
         errors: {
             test: "asd",
-            kalle: "tjena"
+            kalle: "tjena",
+            password: "Too few characters"
         }
     }
 

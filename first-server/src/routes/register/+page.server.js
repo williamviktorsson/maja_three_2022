@@ -47,11 +47,7 @@ export async function POST({ request }) {
 
     console.log(cookies)
 
-    return {
-        errors: {
-            message: "something wong"
-        }
-    }
+
 }
 
 /** @type {import('./$types').Action} */

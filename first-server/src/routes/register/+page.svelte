@@ -3,7 +3,7 @@
     export let data;
 
     /**
-     * @type {import('./$types').Errors}
+     * @type any
      */
     export let errors;
 </script>

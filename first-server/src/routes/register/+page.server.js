@@ -32,13 +32,31 @@ export async function POST({ request }) {
     // Is the password too simple?
 
 
+    let user = await collection.findOne({ password })
 
-    registered = true;
+    if (user) {
+        return {
+            errors: {
+                message: "password already taken by username: " + user.username
+            }
+        }
+    }
 
-    if (req) {
+
+
+    if (username && password && password.toString().length > 4 &&
+        !await collection.findOne({ username })) {
         // TODO: Dont just create the account. Validate that the user sent proper stuff
         // The user doesnt already exist & passwords are provided.
-        collection.insertOne({ "username": "kalle", "password": "majarox" })
+        collection.insertOne({ username, password })
+        registered = true;
+
+    } else {
+        return {
+            errors: {
+                message: "something wrong"
+            }
+        }
     }
 
     const body = { "register - post": "123" }

@@ -20,7 +20,14 @@ export async function POST({ request, setHeaders }) {
 
     // check that password and username matches a user and password in database
 
+    let userfound = false;
+
     let result = await collection.findOne({ "username": "test", "password": "test" });
+    // 
+
+    if (!result) {
+        throw error(400,"no")
+    }
 
     // if success, set login session token.
 

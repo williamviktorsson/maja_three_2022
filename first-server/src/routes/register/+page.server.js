@@ -26,12 +26,8 @@ export async function POST({ request }) {
 
     // Check if password and username has been sent
     // else throw error with text describing whats wrong
-
     // Does the username already exist?
-
     // Is the password too simple?
-
-
     let user = await collection.findOne({ password })
 
     if (user) {

@@ -1,4 +1,6 @@
 import * as state from '$lib/state';
+import { redirect } from '@sveltejs/kit';
+import { parse } from 'cookie';
 
 
 // i load säger vi vad som ska hämtas från servern och tillhandahållas
@@ -6,12 +8,20 @@ import * as state from '$lib/state';
 
 
 /** @type {import('./$types').PageServerLoad} */
-export function load() {
+export function load(request ) {
+
+    if(!request.locals.token){
+        throw redirect(302,'/login')
+    }
+
+
+
     return {
         number: state.number,
         kalle: "urban",
         elof: "sinan 123",
-        sixten: [123,456]
+        sixten: [123,456],
+        bjorn: "tjenix"
     };
 }
 
@@ -32,7 +42,7 @@ export async function POST() {
         errors: {
             test: "asd",
             kalle: "tjena",
-            password: "Too few characters"
+            password: "oh damn dude"
         }
     }
 

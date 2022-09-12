@@ -20,3 +20,15 @@
         <p>{errors.message}</p>
     {/if}
 </form>
+
+<style>
+    :global(body) {
+        background-color: blanchedalmond;
+        margin: 0;
+    }
+
+    p,
+    h1 {
+        color: red;
+    }
+</style>

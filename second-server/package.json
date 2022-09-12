@@ -1,5 +1,5 @@
 {
-	"name": "firsterererer-server",
+	"name": "second-server",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
@@ -12,6 +12,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@types/cookie": "^0.5.1",
+		"cookie": "^0.5.0",
 		"mongodb": "^4.9.1",
 		"svelte": "^3.46.0",
 		"svelte-check": "^2.7.1",
@@ -22,7 +23,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/fira-mono": "^4.5.0",
-		"cookie": "^0.4.1"
+		"@fontsource/fira-mono": "^4.5.0"
 	}
 }

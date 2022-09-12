@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
-	export let form: ActionData;
+	export let form: any;
 </script>
 
 <form method="POST">
 	<input type="text" name="username" id="" />
-	<input type="password" name="password" id="" />
+	<input type="text" name="password" id="" />
 
-	<button>Login</button>
+	<button>Register</button>
+
 	{#if form?.message}
 		<p>{form.message}</p>
 	{/if}

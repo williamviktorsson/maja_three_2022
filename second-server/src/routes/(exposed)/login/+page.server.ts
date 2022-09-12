@@ -31,20 +31,25 @@ export const actions: Actions = {
 		// if success, set login session token.
 
 
+		if (result) {
 
-		const user = {
-			id: 'secret'
-		};
 
-		cookies.set('userid', user.id, {
-			path: '/',
-			httpOnly: true,
-			sameSite: 'strict',
-			secure: process.env.NODE_ENV === 'production',
-			maxAge: 120 // two minutes
-		});
+			const user = {
+				id: 'secret'
+			};
 
-		throw redirect(307, '/');
+			cookies.set('userid', user.id, {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'strict',
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 120 // two minutes
+			});
+
+			throw redirect(307, '/');
+		} else {
+			return invalid(400, { message: "invalid credentials" })
+		}
 	},
 
 };

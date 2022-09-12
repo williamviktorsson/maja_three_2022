@@ -9,7 +9,7 @@ export const load: PageServerLoad = ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request }) => {
 		const req = await request.formData();
 		const username = req.get('username');
 		const password = req.get('password');
@@ -25,32 +25,20 @@ export const actions: Actions = {
 		// Does the username already exist?
 
 		// Is the password too simple?
-		if (!req) {
-			return invalid(400, {
-				message: 'Something went wrong',
-				info: 'test'
-			});
-		}
 
-		if (!req) {
+		if (!await collection.findOne({ username })) {
 			// TODO: Dont just create the account. Validate that the user sent proper stuff
 			// The user doesnt already exist & passwords are provided.
 			collection.insertOne({ username: 'kalle', password: 'majarox' });
+
+			return {
+				message: 'Success',
+			};
+
+		} else {
+			return invalid(400, { message: "username exists" })
 		}
 
-
-		console.log(cookies);
 	},
-	delete: async ({ request, cookies }) => {
-		console.log(cookies);
 
-		/*     const client = await database.connect();
-			const db = client.db("test"); */
-
-
-		// does a cookie exist for the user id?
-		// in other words, is the user signed in?
-
-		// delete account connected to the session cookie.
-	}
 };

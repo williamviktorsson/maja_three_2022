@@ -1,3 +1,8 @@
+/* CSS shamelessly stolen from Joy of Code */
+/* https: //joyofcode.xyz/sveltekit-authentication-using-cookies */
+/* https: //www.youtube.com/watch?v=T935Ya4W5X0 */
+/* https: //github.com/joysofcode/sveltekit-auth-cookies/blob/migration/src/styles/app.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 body {

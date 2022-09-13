@@ -1,13 +1,6 @@
 import { invalid, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
-import * as databas from '$lib/database'
-export const load: PageServerLoad = async ({ locals }) => {
-
-	if (locals.userid) {
-		throw redirect(302, '/')
-	}
-
-}
+import type { Actions } from './$types';
+import * as database from '$lib/database'
 
 export const actions: Actions = {
 	login: async ({ request, locals, cookies }) => {

@@ -3,7 +3,7 @@
 // and what to do when importing types
 declare namespace App {
 
-	// what data should pass to the user in Locals
+	// what data should pass to the user in locals
 	interface Locals {
 		userid: string;
 	}

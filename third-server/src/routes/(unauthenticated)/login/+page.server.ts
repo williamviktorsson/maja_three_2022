@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { invalid, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import * as databas from '$lib/database'
 export const load: PageServerLoad = async ({ locals }) => {
@@ -16,6 +16,10 @@ export const actions: Actions = {
 		// TODO: Implement login
 		// Check if password and username
 		// exists and is correct
+
+		if (form.get('username') == "william") {
+			return invalid(400, { message: "username invalid" })
+		}
 
 		cookies.set('userid', 'secret', {
 			path: '/',

@@ -2,10 +2,10 @@ import { invalid, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import * as database from '$lib/database'
 
-export const load: PageServerLoad = ({ }) => {
+export const load: PageServerLoad = async ({ }) => {
 	return {
 		test: "tjena",
-		kompis: 1234,
+		buddy:123
 	}
 
 }

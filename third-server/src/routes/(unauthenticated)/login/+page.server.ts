@@ -1,6 +1,15 @@
 import { invalid, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import * as database from '$lib/database'
+
+export const load: PageServerLoad = ({ }) => {
+	return {
+		test: "tjena",
+		kompis: 1234,
+		buddy: 123
+	}
+
+}
 
 export const actions: Actions = {
 	login: async ({ request, locals, cookies }) => {

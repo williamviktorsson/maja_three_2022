@@ -22,7 +22,10 @@ export const load = async ({ locals }) => {
 		return {
 			/** @type {Todo[]} */
 			todos: [],
-			test: 123
+			test: "asd",
+			rodos: 123
+
+
 		};
 	}
 

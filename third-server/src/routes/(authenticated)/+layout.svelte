@@ -12,6 +12,11 @@
 
     <a href="/support">Support</a>
 </nav>
-<p>{data?.userid}</p>
+
+<p>{data.userid}</p>
+<p>{data.name}</p>
+<p>{data.test}</p>
+
+
 
 <slot />

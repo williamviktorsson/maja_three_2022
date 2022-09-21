@@ -7,6 +7,9 @@ export const actions: Actions = {
 		// TODO: Implement register
 		// Check if ustername already exist etc.
 
+		return {
+			success: "User registered!"
+		}
 
 	},
 };

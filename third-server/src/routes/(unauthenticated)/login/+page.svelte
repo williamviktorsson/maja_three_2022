@@ -8,9 +8,15 @@
 
 <form method="POST" action="?/login">
 	<input type="text" name="username" />
-	<input type="passowrd" name="password" />
+	{#if form?.password}
+		<p>{form?.password}</p>
+	{/if}
+	<input type="password" name="password" />
+		{#if form?.password}
+		<p>{form?.password}</p>
+	{/if}
 	<button>LOGIN</button>
-	{#if form?.message}
-		<p>{form?.message}</p>
+	{#if form?.user}
+		<p>{form?.user}</p>
 	{/if}
 </form>

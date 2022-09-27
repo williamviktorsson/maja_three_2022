@@ -6,21 +6,19 @@ import { ObjectId } from 'mongodb';
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
 
-
-
-
     if (locals.userid) {
 
-        const client = await database.connect()
+       /*  const client = await database.connect()
         const db = client.db('test')
         const collection = db.collection('users')
 
-        const user = await collection.findOne({ "_id": new ObjectId(locals.userid) })
+        const user = await collection.findOne({ "_id": new ObjectId(locals.userid) }) */
 
         return {
-            name: user?.username ?? 'Name not found',
+            name: 'Name not found',
             userid: locals.userid,
-            test: "123"
+            test: "123",
+            feeling: "asdash"
         }
     } else {
         throw redirect(302, '/login')

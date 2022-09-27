@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
 	import type { ActionData, PageServerData } from "./$types";
 
-	export let data: PageServerData;
-
 	export let form: ActionData;
+
 </script>
 
-<form method="POST" action="?/login">
+<form use:enhance method="POST" action="?/login">
 	<input type="text" name="username" />
-	{#if form?.password}
-		<p>{form?.password}</p>
+	{#if form?.username}
+		<p>{form?.username}</p>
 	{/if}
 	<input type="password" name="password" />
 		{#if form?.password}
@@ -18,5 +18,8 @@
 	<button>LOGIN</button>
 	{#if form?.user}
 		<p>{form?.user}</p>
+	{/if}
+	{#if form?.server}
+		<p>{form?.server}</p>
 	{/if}
 </form>

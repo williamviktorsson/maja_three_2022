@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ActionData } from "./$types";
+  import type { ActionData } from "./$types";
 
 
 

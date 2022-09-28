@@ -9,7 +9,7 @@ export const actions: Actions = {
 
 		// TODO: Implement register
 		// Check if ustername already exist etc.
-		cookies.delete('userid')
+		cookies.delete('session')
 		throw redirect(302, '/login')
 
 	},
@@ -23,7 +23,7 @@ export const actions: Actions = {
 		const db = client.db('test')
 		const collection = db.collection('users')
 
-		const result = await collection.deleteOne({ "_id": new ObjectId(locals.userid) })
+		const result = await collection.deleteOne({ "_id": new ObjectId(locals.session) })
 
 		if(!result.acknowledged || result.deletedCount!=1){
 			return invalid(400,{delete:"failed"})

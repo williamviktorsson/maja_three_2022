@@ -1,27 +1,21 @@
-import type { LayoutServerLoad } from './$types';
-import { redirect } from '@sveltejs/kit';
-import * as database from '$lib/database'
-import { ObjectId } from 'mongodb';
-
+import type { LayoutServerLoad } from "./$types";
+import { error, redirect } from "@sveltejs/kit";
+import * as database from "$lib/database";
+import { ObjectId } from "mongodb";
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
+  if (locals.session) {
+    const collection = await database.collection("users");
 
-    if (locals.userid) {
-
-       /*  const client = await database.connect()
-        const db = client.db('test')
-        const collection = db.collection('users')
-
-        const user = await collection.findOne({ "_id": new ObjectId(locals.userid) }) */
-
-        return {
-            name: 'Name not found',
-            userid: locals.userid,
-            test: "123",
-            feeling: "asdash"
-        }
-    } else {
-        throw redirect(302, '/login')
+    const user = await collection.findOne({ session: locals.session });
+    if (!user?.username) {
+      throw error(404, "user not found for current session");
     }
 
-}
+    return {
+      name: user.username,
+    };
+  } else {
+    throw redirect(302, "/login");
+  }
+};

@@ -1,13 +1,14 @@
-import { forums } from "$lib/state";
+import { forums, type Forum } from "$lib/state";
 import { error, invalid, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+
 
 export const load: PageServerLoad = async ({ params }) => {
   if (params.forum) {
     for (let index = 0; index < forums.length; index++) {
-      const element = forums[index];
-      if (element.id == params.forum) {
-        return element;
+      const forum: Forum = forums[index];
+      if (forum.id == params.forum) {
+        return forum;
       }
     }
   }

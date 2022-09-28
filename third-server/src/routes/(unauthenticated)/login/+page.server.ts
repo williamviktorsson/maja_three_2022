@@ -16,11 +16,6 @@ export const actions: Actions = {
       secure: process.env.NODE_ENV === "production", // optional for now
       maxAge: 1200, //
     });
-	
-	return;
-
-    console.log(username);
-    console.log(password);
 
     // TODO: Implement login
     // Check if password and username
@@ -35,23 +30,36 @@ export const actions: Actions = {
     }
 
     try {
-      const client = await database.connect();
-      const db = client.db("test");
-      const collection = db.collection("users");
+      const collection = await database.collection("users");
 
-      const user: any = await collection.findOne({ username, password });
+      const result = await collection.findOne({ username, password });
 
-      cookies.set("userid", user._id.toString(), {
+      if (!result) {
+        return invalid(400, {
+          user: "wrong username + password combination",
+        });
+      }
+
+      const session = crypto.randomUUID();
+
+      const update = await collection.updateOne(
+        { username, password },
+        { $set: { session } }
+      );
+
+      if (!update.acknowledged) {
+        return invalid(400, {
+          user: "session creation failed",
+        });
+      }
+
+      cookies.set("session", session, {
         path: "/",
         httpOnly: true, // optional for now
         sameSite: "strict", // optional for now
         secure: process.env.NODE_ENV === "production", // optional for now
         maxAge: 120, //
       });
-
-      if (!user) {
-        return invalid(400, { user: "not found" });
-      }
     } catch (e) {
       return invalid(400, { server: "database connection error" });
     }

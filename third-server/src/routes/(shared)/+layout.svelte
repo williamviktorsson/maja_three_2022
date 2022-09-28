@@ -4,7 +4,7 @@
 </script>
 
 <nav>
-  {#if data?.userid}
+  {#if data?.authenticated}
     <a href="/">Home</a>
     <a href="/settings">Settings</a>
     <a href="/forums">Forums</a>

@@ -1,7 +1,9 @@
-export const forums: { id: string; name: string; messages: string[] }[] = [
+export const forums: Forum[] = [
   {
     id: "asdghas",
     name: "cool forum",
-    messages: ["tjena","hej"],
+    messages: ["tjena", "hej"],
   },
 ];
+
+export type Forum = { id: string; name: string; messages: string[] };

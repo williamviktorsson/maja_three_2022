@@ -14,7 +14,7 @@
 
 <hr />
 
-<form use:enhance method="post" action="?/add">
+<form use:enhance={(e) => e.form.reset()} method="post" action="?/add">
   <input type="text" name="forumname" placeholder="forum name" id="" />
   <button type="submit">add forum</button>
   {#if form?.error}

@@ -1,36 +1,35 @@
-import { invalid, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
-import * as database from '$lib/database'
-import { ObjectId } from 'mongodb';
+import { invalid, redirect } from "@sveltejs/kit";
+import type { Actions } from "./$types";
+import { database } from "$lib/database";
 
 export const actions: Actions = {
-	logout: async ({ request, locals, cookies }) => {
-		const form = await request.formData();
+  logout: async ({ request, locals, cookies }) => {
+    const form = await request.formData();
 
-		// TODO: Implement register
-		// Check if ustername already exist etc.
-		cookies.delete('session')
-		throw redirect(302, '/login')
+    // TODO: Implement register
+    // Check if ustername already exist etc.
+    cookies.delete("session");
+    throw redirect(302, "/login");
+  },
+  deleteaccount: async ({ request, locals, cookies }) => {
+    // TODO: Implement delete account
+    // Check if username already exist etc.
 
-	},
-	deleteaccount: async ({ request, locals, cookies }) => {
-		const form = await request.formData();
+    const user = await database.users.findUnique({
+      where: { session: locals.session },
+    });
 
-		// TODO: Implement delete account
-		// Check if ustername already exist etc.
+    if (user) {
+      const result = await database.users.delete({
+        where: { id: user?.id },
+      });
 
-		const client = await database.connect()
-		const db = client.db('test')
-		const collection = db.collection('users')
+      console.log(result);
 
-		const result = await collection.deleteOne({ "_id": new ObjectId(locals.session) })
-
-		if(!result.acknowledged || result.deletedCount!=1){
-			return invalid(400,{delete:"failed"})
-		}
-
-		cookies.delete('userid')
-		throw redirect(302, '/register')
-
-	},
+      cookies.delete("userid");
+      throw redirect(302, "/login");
+    } else {
+      return invalid(404, { delete: "deletion error" });
+    }
+  },
 };

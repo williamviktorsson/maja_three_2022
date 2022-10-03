@@ -1,15 +1,14 @@
 import type { Handle } from "@sveltejs/kit";
-import * as database from "$lib/database";
+import { database } from "$lib/database";
 
 // handle runs for every request to the server
 export const handle: Handle = async ({ event, resolve }) => {
   const session = event.cookies.get("session");
 
   if (session) {
-    const collection = await database.collection("users");
-    let result = await collection.findOne({ session });
-    if (result) {
-      event.locals.session = session;
+    let result = await database.users.findUnique({ where: { session } });
+    if (result?.session) {
+      event.locals.session = result.session;
     }
   }
 

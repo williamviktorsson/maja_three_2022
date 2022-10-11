@@ -1,6 +1,7 @@
 import { database } from "$lib/database";
 import { redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import * as crypto from "crypto";
 
 export const actions: Actions = {
   register: async ({ request, locals, cookies }) => {
@@ -15,11 +16,19 @@ export const actions: Actions = {
       if (!users) {
         const session = crypto.randomUUID();
 
-        await database.users.create({
-          data: { username, password, session },
+                // Creating a unique salt for a particular user
+        const salt = crypto.randomBytes(16).toString('hex'); 
+        // Should be saved in the database along with the hash
+
+        // Hash the salt and password with 1000 iterations, 64 length and sha512 digest 
+        const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+
+
+        const user = await database.users.create({
+          data: { username, hash, salt, session },
         });
 
-        cookies.set("session", session, {
+        cookies.set("session", user.session, {
           path: "/",
           httpOnly: true, // optional for now
           sameSite: "strict", // optional for now

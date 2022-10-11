@@ -15,7 +15,6 @@
 </svelte:head>
 
 <div class="todos">
-	<h1>Todos</h1>
 
 	<form
 		class="new"
@@ -30,7 +29,7 @@
 			};
 		}}
 	>
-		<input name="text" aria-label="Add todo" placeholder="+ tap to add a todo" />
+		<input class="form" name="text" aria-label="Add todo" placeholder="vad vill du göra?" />
 	</form>
 
 	{#each todos as todo (todo.uid)}
@@ -88,9 +87,13 @@
 		border: 1px solid transparent;
 	}
 
+	.form {
+		border: 3px solid #573b3265 !important;
+	}
+
 	input:focus-visible {
-		box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.1);
-		border: 1px solid #ff3e00 !important;
+		box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.1);
+		border: 3px solid #573b32 !important;
 		outline: none;
 	}
 
@@ -100,8 +103,8 @@
 		padding: 0.5em 1em 0.3em 1em;
 		box-sizing: border-box;
 		background: rgba(255, 255, 255, 0.05);
-		border-radius: 8px;
-		text-align: center;
+		border-radius: 4px;
+		text-align: left;
 	}
 
 	.todo {
@@ -112,7 +115,7 @@
 		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
 		background-color: white;
-		border-radius: 8px;
+		border-radius: 4px;
 		filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
 		transform: translate(-1px, -1px);
 		transition: filter 0.2s, transform 0.2s;

@@ -1,6 +1,7 @@
 import { invalid, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { database } from "$lib/database";
+import * as crypto from "crypto"
 
 export const actions: Actions = {
   login: async ({ request, locals, cookies }) => {
@@ -23,12 +24,22 @@ export const actions: Actions = {
 
     try {
       const result = await database.users.findFirst({
-        where: { username, password },
+        where: { username },
       });
 
       console.log(result)
 
       if (!result) {
+        return invalid(400, {
+          user: "wrong username + password combination",
+        });
+      }
+
+      const {salt, hash} = result;
+
+      const newhash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+
+      if (newhash!=hash) {
         return invalid(400, {
           user: "wrong username + password combination",
         });
@@ -43,7 +54,7 @@ export const actions: Actions = {
         },
       });
 
-      cookies.set("session", session, {
+      cookies.set("session", update.session, {
         path: "/",
         httpOnly: true, // optional for now
         sameSite: "strict", // optional for now

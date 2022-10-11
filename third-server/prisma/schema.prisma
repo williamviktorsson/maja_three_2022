@@ -15,7 +15,8 @@ model clicker {
 
 model users {
   id       Int    @id @unique @default(autoincrement())
-  password String
+  salt     String @unique
+  hash     String @unique
   session  String @unique
   username String @unique
 }

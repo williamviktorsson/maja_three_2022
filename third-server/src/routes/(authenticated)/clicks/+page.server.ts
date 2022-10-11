@@ -1,4 +1,3 @@
-import { database } from "$lib/database";
 import { invalid } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "./$types";
 

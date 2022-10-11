@@ -1,6 +1,6 @@
 import { invalid, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
-import { database } from "$lib/database";
+import * as database from "$lib/database";
 import * as crypto from "crypto"
 
 export const actions: Actions = {
@@ -23,9 +23,11 @@ export const actions: Actions = {
     }
 
     try {
-      const result = await database.users.findFirst({
-        where: { username },
-      });
+      const client = await database.connect()
+      const db = client.db("test");
+      const collection = db.collection("users");
+
+      const result = await collection.findOne({username});
 
       console.log(result)
 
@@ -47,14 +49,17 @@ export const actions: Actions = {
 
       const session = crypto.randomUUID();
 
-      const update = await database.users.update({
-        where: { id: result.id },
-        data: {
-          session,
-        },
-      });
+      const update = await collection.updateOne({username},{$set:{
+        session
+      }})
 
-      cookies.set("session", update.session, {
+      if(!update.acknowledged){
+        return invalid(400, {
+          user: "session generation failed",
+        });
+      }
+
+      cookies.set("session", session, {
         path: "/",
         httpOnly: true, // optional for now
         sameSite: "strict", // optional for now

@@ -13,7 +13,7 @@
   <a href="/info">Info</a>
 
   <a href="/support">Support</a>
-  <a href="/clicker">Clicker</a>
+  <a href="/clicks">Clicks</a>
 
 </nav>
 

@@ -1,4 +1,4 @@
-import { database } from "$lib/database";
+import * as database from "$lib/database";
 import { redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import * as crypto from "crypto";
@@ -11,9 +11,13 @@ export const actions: Actions = {
     const password = form.get("password")?.toString();
 
     if (username && password) {
-      let users = await database.users.findUnique({ where: { username } });
+      const client = await database.connect()
+      const db = client.db("test");
+      const collection = db.collection("users");
 
-      if (!users) {
+      let user = await collection.findOne({username})
+
+      if (!user) {
         const session = crypto.randomUUID();
 
                 // Creating a unique salt for a particular user
@@ -24,11 +28,15 @@ export const actions: Actions = {
         const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
 
-        const user = await database.users.create({
-          data: { username, hash, salt, session },
-        });
+        const created = await collection.insertOne({ username, hash, salt, session });
 
-        cookies.set("session", user.session, {
+        if(!created.acknowledged){
+          return {
+            error: "error my guy",
+          };
+        }
+
+        cookies.set("session", session, {
           path: "/",
           httpOnly: true, // optional for now
           sameSite: "strict", // optional for now

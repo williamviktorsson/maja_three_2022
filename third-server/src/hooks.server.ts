@@ -6,7 +6,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const session = event.cookies.get("session");
 
   if (session) {
-    let result = await database.users.findUnique({ where: { session } });
+    let result = await database.user.findUnique({ where: { session } });
     if (result?.session) {
       event.locals.session = result.session;
     }

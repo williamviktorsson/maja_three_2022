@@ -23,7 +23,7 @@ export const actions: Actions = {
     }
 
     try {
-      const result = await database.users.findFirst({
+      const result = await database.user.findFirst({
         where: { username },
       });
 
@@ -47,7 +47,7 @@ export const actions: Actions = {
 
       const session = crypto.randomUUID();
 
-      const update = await database.users.update({
+      const update = await database.user.update({
         where: { id: result.id },
         data: {
           session,
@@ -59,9 +59,10 @@ export const actions: Actions = {
         httpOnly: true, // optional for now
         sameSite: "strict", // optional for now
         secure: process.env.NODE_ENV === "production", // optional for now
-        maxAge: 120, //
+        maxAge: 1200, //
       });
     } catch (e) {
+      console.log(e)
       return invalid(400, { server: "database connection error" });
     }
 

@@ -3,7 +3,7 @@ import { invalid } from "@sveltejs/kit";
 import type { PageServerLoad, Actions } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  const user = await database.users.findUnique({
+  const user = await database.user.findUnique({
     where: { session: locals.session },
   });
   const clicks = await database.clicker.findUnique({
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
   click: async ({ locals, request }) => {
-    const user = await database.users.findUnique({
+    const user = await database.user.findUnique({
       where: { session: locals.session },
     });
 

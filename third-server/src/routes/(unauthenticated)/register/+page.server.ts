@@ -11,7 +11,7 @@ export const actions: Actions = {
     const password = form.get("password")?.toString();
 
     if (username && password) {
-      let users = await database.users.findUnique({ where: { username } });
+      let users = await database.user.findUnique({ where: { username } });
 
       if (!users) {
         const session = crypto.randomUUID();
@@ -24,7 +24,7 @@ export const actions: Actions = {
         const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
 
 
-        const user = await database.users.create({
+        const user = await database.user.create({
           data: { username, hash, salt, session },
         });
 

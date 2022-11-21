@@ -8,11 +8,10 @@
 
   <a href="/settings">Settings</a>
 
+  <a href="/chat">Chat</a>
+
   <a href="/forums">Forums</a>
 
-  <a href="/info">Info</a>
-
-  <a href="/support">Support</a>
   <a href="/clicker">Clicker</a>
 
 </nav>

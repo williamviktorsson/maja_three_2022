@@ -15,12 +15,12 @@ export const actions: Actions = {
     // TODO: Implement delete account
     // Check if username already exist etc.
 
-    const user = await database.users.findUnique({
+    const user = await database.user.findUnique({
       where: { session: locals.session },
     });
 
     if (user) {
-      const result = await database.users.delete({
+      const result = await database.user.delete({
         where: { id: user?.id },
       });
 

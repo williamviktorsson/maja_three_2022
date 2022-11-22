@@ -38,4 +38,5 @@ model Message {
   chatId    Int?
   content   String
   timestamp DateTime @default(now())
+  own    Boolean?
 }

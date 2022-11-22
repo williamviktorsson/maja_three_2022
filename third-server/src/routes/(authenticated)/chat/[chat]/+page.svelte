@@ -1,8 +1,8 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
-  import { onMount, onDestroy } from "svelte";
+  import { page } from "$app/stores";
+  import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -10,15 +10,45 @@
 
   $: messages = [...data.chat.messages].reverse();
 
-  /* https://kit.svelte.dev/faq#how-do-i-use-a-client-side-only-library-that-depends-on-document-or-window */
   if (browser) {
-    const interval = setInterval(() => {
-      /* run load function every sec lol */
-      /* https://kit.svelte.dev/docs/modules#$app-navigation-invalidateall */
-      invalidateAll();
-    }, 1000);
+    const ac = new AbortController();
+    const signal = ac.signal;
 
-    onDestroy(() => clearInterval(interval));
+    async function stream() {
+      try {
+        /* GET request to +server.ts */
+        const response = await fetch("/chat/" + $page.params.chat, {
+          signal,
+        });
+
+        /* get the reader for events */
+        const reader = response.body
+          ?.pipeThrough(new TextDecoderStream())
+          .getReader();
+
+        while (reader) {
+          /* read stuff indefinitely */
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          const message = JSON.parse(value);
+
+          /* add the new message */
+          if (message) {
+            message.timestamp = new Date(message.timestamp.toString());
+            messages = [message, ...messages];
+          }
+        }
+        ac.abort();
+      } catch (e) {
+        console.log("error stream closure");
+      }
+    }
+    stream();
+
+    onDestroy(() => {
+      ac.abort();
+    });
   }
 </script>
 
@@ -27,12 +57,12 @@
 {#if data?.chat}
   <div class="chat">
     {#each messages as message}
-      <div class="message" class:own={message.authorId != data.userid}>
+      <div class="message" class:own={message.own}>
         <p>
           {message.content}
         </p>
         <i
-          >{message.authorId != data.userid
+          >{message.own
             ? message.author?.username + " at "
             : ""}{message.timestamp.toDateString()}</i
         >

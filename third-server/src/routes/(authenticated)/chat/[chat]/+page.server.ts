@@ -1,6 +1,7 @@
 import { error, invalid, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { database } from "$lib/database";
+import { streams } from "./+server";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   if (params.chat) {
@@ -17,7 +18,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
         const user = await database.user.findUniqueOrThrow({
           where: { session: locals.session },
         });
-        return { chat, userid: user.id };
+
+        chat.messages.forEach((e) => (e.own = e.authorId == user.id));
+
+        return { chat };
       }
     } catch {
       throw error(404, "database items not found");
@@ -43,9 +47,19 @@ export const actions: Actions = {
             where: { session: locals.session },
           });
           try {
-            await database.message.create({
+            const msg = await database.message.create({
               data: { authorId: user?.id, chatId: chat.id, content: message },
+              include: { author: { select: { username: true, id: true } } },
             });
+
+            for (const session in streams) {
+              /* send messages to all other streams exept own for this chat */
+              const connection = streams[session];
+              if (connection.chat == params.chat && session != locals.session) {
+                /* enqueue messages to all streams for this chat */
+                connection.controller.enqueue(JSON.stringify(msg));
+              }
+            }
           } catch (e) {
             return invalid(400, { error: "message creation error" });
           }

@@ -9,9 +9,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
         include: {
-          messages: {
-            include: { author: { select: { username: true, id: true } } },
-          },
+          messages: {include:{author:{select:{username:true}}}}
         },
       });
       if (chat) {
@@ -19,7 +17,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           where: { session: locals.session },
         });
 
-        chat.messages.forEach((e) => (e.own = e.authorId == user.id));
+        chat.messages.forEach((e) => (e.own=e.authorId==user.id));
 
         return { chat };
       }

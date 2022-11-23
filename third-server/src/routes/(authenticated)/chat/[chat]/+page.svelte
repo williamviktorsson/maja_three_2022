@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
@@ -49,6 +50,17 @@
     onDestroy(() => {
       ac.abort();
     });
+
+    // https://kit.svelte.dev/faq#how-do-i-use-a-client-side-only-library-that-depends-on-document-or-window
+    /*     if (browser) {
+      const interval = setInterval(() => {
+        // run load function every sec lol 
+        // https://kit.svelte.dev/docs/modules#$app-navigation-invalidateall
+        invalidateAll();
+      }, 1000);
+
+      onDestroy(() => clearInterval(interval));
+    } */
   }
 </script>
 

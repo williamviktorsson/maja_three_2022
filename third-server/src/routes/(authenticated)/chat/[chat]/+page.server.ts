@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
         include: {
-          messages: {include:{author:{select:{username:true}}}}
+          messages: {include:{author:true}}
         },
       });
       if (chat) {

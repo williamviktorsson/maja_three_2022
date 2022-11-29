@@ -4,7 +4,7 @@ import { database } from "$lib/database";
 
 export const streams: Record<
   string,
-  { controller: ReadableStreamController<any>; chat: string }
+  { controller: ReadableStreamController<string>; chat: string }
 > = {};
 
 export const GET: RequestHandler = async ({ locals, params }) => {
@@ -17,8 +17,8 @@ export const GET: RequestHandler = async ({ locals, params }) => {
         const user = await database.user.findUniqueOrThrow({
           where: { session: locals.session },
         });
-
-        const stream = new ReadableStream({
+        
+        const stream = new ReadableStream<string>({
           start(controller) {
             /* save the controller for the stream so that we can */
             /* enqueue messages into the stream */

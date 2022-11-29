@@ -7,6 +7,7 @@
 <style>
   body {
     background-color: gray;
+    min-height: 100%;
   }
   main {
     margin-left: 30%;

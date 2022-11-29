@@ -5,6 +5,7 @@ import { database } from "$lib/database";
 export const streams: any = {};
 
 export const GET: RequestHandler = async ({ locals, params }) => {
+  
   const stream = new ReadableStream<string>({
     start(controller) {
       /* save the controller for the stream so that we can */

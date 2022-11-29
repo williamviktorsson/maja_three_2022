@@ -4,16 +4,20 @@ import { database } from "$lib/database";
 import { streams } from "./+server";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
+
+  /* Find the correct chat */
   const chat = await database.chat.findUniqueOrThrow({
     where: { id: Number(params.chat) },
     include: {
       messages: { include: { author: true } },
     },
   });
+  /* Find the user who sen the message */
   const user = await database.user.findUniqueOrThrow({
     where: { session: locals.session },
   });
 
+  /* set boolean own to true for all messages in the chat which the current user wrote */
   chat.messages.forEach((e) => (e.own = e.authorId == user.id));
 
   return { chat };

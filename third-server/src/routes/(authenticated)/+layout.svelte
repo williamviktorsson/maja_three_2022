@@ -14,8 +14,8 @@
 
   <a href="/clicker">Clicker</a>
 
+  <a href="/blog">Blog</a>
 </nav>
-
 
 <p>{data.name}</p>
 

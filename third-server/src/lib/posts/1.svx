@@ -1,0 +1,20 @@
+---
+title: Post One
+date: "2021-12-14"
+---
+
+<script>
+ let a = 0;
+</script>
+
+Hello, I am _Post One._
+
+**Nice to meet you!**
+
+**sick**
+
+😀 😃 😄 😁 😆 😅 😂
+
+<h1>{a}</h1>
+
+<button on:click={()=>{a = a + 1}}>CLICK ME</button>

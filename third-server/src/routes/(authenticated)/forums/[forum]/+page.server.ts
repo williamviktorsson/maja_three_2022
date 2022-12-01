@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ params }) => {
     }
   }
 
-  throw error(404, "forum not found");
+  throw error(404, "forum not found: " + params.forum );
 };
 
 export const actions: Actions = {

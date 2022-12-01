@@ -1,0 +1,12 @@
+# Tjena
+## Läget
+
+<script>
+    let num=0;
+</script>
+
+**kul** att se dig
+
+<p>{num}</p>
+
+<button on:click={()=>{num+=1}}>click me</button>

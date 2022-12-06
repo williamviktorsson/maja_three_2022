@@ -20,7 +20,8 @@ model User {
   session  String    @unique
   username String    @unique
   clicker  Clicker?
-  messages Message[]
+  messages Message[] @relation("messages")
+  likes    Message[] @relation("likes")
 }
 
 model Chat {
@@ -31,12 +32,13 @@ model Chat {
 
 model Message {
   id        Int      @id @default(autoincrement())
-  author    User?    @relation(fields: [authorId], references: [id])
+  author    User?    @relation(name: "messages", fields: [authorId], references: [id])
   authorId  Int? // relation scalar field  (used in the `@relation` attribute above)
-  
   chat      Chat?    @relation(fields: [chatId], references: [id])
   chatId    Int?
   content   String
   timestamp DateTime @default(now())
-  own    Boolean?
+  own       Boolean?
+  liked     Boolean?
+  likedBy   User[]   @relation(name: "likes")
 }

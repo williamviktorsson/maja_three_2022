@@ -1,4 +1,3 @@
-<!-- post.svelte -->
 <script>
   // @ts-nocheck
   export let title;

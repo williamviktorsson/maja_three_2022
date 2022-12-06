@@ -9,7 +9,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
         include: {
-          messages: {include:{author:true}}
+          messages: {
+            include: {
+              author: { select: { username: true, id: true } },
+              likedBy: { select: { id: true } },
+            },
+          },
         },
       });
       if (chat) {
@@ -17,7 +22,11 @@ export const load: PageServerLoad = async ({ params, locals }) => {
           where: { session: locals.session },
         });
 
-        chat.messages.forEach((e) => (e.own=e.authorId==user.id));
+        chat.messages.forEach((e) => {
+          e.own = e.authorId == user.id;
+          e.liked = e.likedBy.find((usr) => usr.id == user.id) != undefined;
+          console.log(e.liked);
+        });
 
         return { chat };
       }
@@ -47,7 +56,10 @@ export const actions: Actions = {
           try {
             const msg = await database.message.create({
               data: { authorId: user?.id, chatId: chat.id, content: message },
-              include: { author: { select: { username: true, id: true } } },
+              include: {
+                author: { select: { username: true, id: true } },
+                likedBy: { select: { id: true } },
+              },
             });
 
             for (const session in streams) {
@@ -60,6 +72,66 @@ export const actions: Actions = {
             }
           } catch (e) {
             return invalid(400, { error: "message creation error" });
+          }
+        }
+      }
+    } else throw error(404, "forum not found");
+  },
+  like: async ({ request, params, locals }) => {
+    if (params.chat) {
+      const form = await request.formData();
+      const messageId = form.get("messageId")?.toString();
+      if (!messageId) {
+        return invalid(400, { error: "missing messageId" });
+      } else {
+        const chat = await database.chat.findUnique({
+          where: { id: Number(params.chat) },
+        });
+        if (chat?.id == Number(params.chat)) {
+          try {
+            console.log(messageId);
+            const message = await database.message.findUniqueOrThrow({
+              where: { id: Number(messageId) },
+            });
+            await database.user.update({
+              where: { session: locals.session },
+              data: {
+                likes: { connect: { id: message.id } },
+              },
+            });
+          } catch (e) {
+            console.log(e);
+            return invalid(400, { error: "message like error" });
+          }
+        }
+      }
+    } else throw error(404, "forum not found");
+  },
+  unlike: async ({ request, params, locals }) => {
+    if (params.chat) {
+      const form = await request.formData();
+      const messageId = form.get("messageId")?.toString();
+      if (!messageId) {
+        return invalid(400, { error: "missing messageId" });
+      } else {
+        const chat = await database.chat.findUnique({
+          where: { id: Number(params.chat) },
+        });
+        if (chat?.id == Number(params.chat)) {
+          try {
+            console.log(messageId);
+            const message = await database.message.findUniqueOrThrow({
+              where: { id: Number(messageId) },
+            });
+            await database.user.update({
+              where: { session: locals.session },
+              data: {
+                likes: { disconnect: { id: message.id } },
+              },
+            });
+          } catch (e) {
+            console.log(e);
+            return invalid(400, { error: "message unlike error" });
           }
         }
       }

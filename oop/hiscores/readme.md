@@ -1,11 +1,38 @@
-# Instructions
+# create-svelte
 
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
-1. Ni har fått en stor uppsättning interfaces givna för ett serversystem som skall kunna hantera hiscores för olika leaderboards. Systemet innehåller en definition av poäng, spelare, ranker.
-2. Er uppgift är att implementera systemet. Det finns given startkod i **client.ts** och **server.js**. Den givna koden är inte färdig.
-3. Servern skall kunna svara på alla requests som finns beskrivna i **requests.s**. Kommentarerna där specifierar vilken typ av requests det är och för vilken *ändpunkt* på servern.
-4. Informationen behövs lagras i databas för att informationen skall persistera mellan körningar.
-5. Ni får programmera och utföra denna uppgift i grupper om två. Ta en titt på [parprogrammering](https://en.wikipedia.org/wiki/Pair_programming). Se till att turas om och att diskutera tillsammans lösningar på uppgiften.
-6. Er klient skall kunna bevisa att ni kan använda alla operationer som servern exponerar.
-7. För att bli godkänd måste ni demonstrera  tillsammans en annan grupp att systemen kan kommunicera med varandra. Detta illustrerar kraften i att använda interfaces vilket skapar interoperabilitet mellan olika system som utvecklats av olika utvecklare. 
-    - Turas om att köra varandras klientprogram mot varandras serverprogram.
+## Creating a project
+
+If you're seeing this, you've probably already done this step. Congrats!
+
+```bash
+# create a new project in the current directory
+npm create svelte@latest
+
+# create a new project in my-app
+npm create svelte@latest my-app
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

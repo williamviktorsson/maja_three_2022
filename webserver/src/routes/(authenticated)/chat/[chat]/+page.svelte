@@ -78,6 +78,17 @@
             ? message.author?.username + " at "
             : ""}{message.timestamp.toDateString()}</i
         >
+        {#if !message.own && !message.liked}
+          <form use:enhance method="post" action="?/like">
+            <input type="hidden" name="messageId" value={message.id} />
+            <button type="submit">like</button>
+          </form>
+        {:else if !message.own}
+          <form use:enhance method="post" action="?/unlike">
+            <input type="hidden" name="messageId" value={message.id} />
+            <button type="submit">unlike</button>
+          </form>
+        {/if}
       </div>
     {/each}
   </div>
@@ -85,13 +96,7 @@
 
 <hr />
 
-<form
-  use:enhance={({ form }) => {
-    form.reset();
-  }}
-  method="post"
-  action="?/write"
->
+<form use:enhance method="post" action="?/write">
   <input type="text" name="message" placeholder="message" id="" />
   <button type="submit">write message</button>
   {#if form?.error}

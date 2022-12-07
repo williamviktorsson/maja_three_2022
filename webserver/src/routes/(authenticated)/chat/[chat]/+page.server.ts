@@ -30,7 +30,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
         return { chat };
       }
-    } catch {
+    } catch (e) {
+      console.log(e)
       throw error(404, "database items not found");
     }
   }

@@ -28,7 +28,7 @@
           .getReader();
 
         while (reader) {
-          /* read stuff indefinitely */
+          /* read stuff indefinitely */ 
           const { value, done } = await reader.read();
           if (done) break;
 

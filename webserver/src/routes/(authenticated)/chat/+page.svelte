@@ -6,10 +6,23 @@
   export let form: ActionData;
 </script>
 
-<h1>Forums</h1>
+<h1>Chats</h1>
 <hr />
 {#each data.chats as chat}
-  <p><a href={"/chat/" + chat.id}>{chat.name}</a></p>
+  <div style="display:flex">
+    <p><a href={"/chat/" + chat.id}>{chat.name}</a></p>
+    {#if data.favoriteChats.includes(chat.id)}
+      <form action="?/unfavorite" method="post">
+        <input type="hidden" name="chatId" value={chat.id} />
+        <button type="submit">unfavorite</button>
+      </form>
+    {:else}
+      <form action="?/favorite" method="post">
+        <input type="hidden" name="chatId" value={chat.id} />
+        <button type="submit">favorite</button>
+      </form>
+    {/if}
+  </div>
 {/each}
 
 <hr />

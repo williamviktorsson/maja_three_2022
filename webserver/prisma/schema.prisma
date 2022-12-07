@@ -14,20 +14,22 @@ model Clicker {
 }
 
 model User {
-  id       Int       @id @unique @default(autoincrement())
-  salt     String    @unique
-  hash     String    @unique
-  session  String    @unique
-  username String    @unique
-  clicker  Clicker?
-  messages Message[] @relation("messages")
-  likes    Message[] @relation("likes")
+  id            Int       @id @unique @default(autoincrement())
+  salt          String    @unique
+  hash          String    @unique
+  session       String    @unique
+  username      String    @unique
+  clicker       Clicker?
+  messages      Message[] @relation("messages")
+  likes         Message[] @relation("likes")
+  favoriteChats Chat[]    @relation(name:"favoriteChats")
 }
 
 model Chat {
-  id       Int       @id @unique @default(autoincrement())
-  name     String    @unique
-  messages Message[]
+  id          Int       @id @unique @default(autoincrement())
+  name        String    @unique
+  messages    Message[]
+  favoritedBy User[]    @relation(name:"favoriteChats")
 }
 
 model Message {

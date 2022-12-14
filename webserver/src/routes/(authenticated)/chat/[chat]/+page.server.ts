@@ -2,6 +2,23 @@ import { error, invalid, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { database } from "$lib/database";
 import { streams } from "./+server";
+import { compile } from "mdsvex";
+import rehypeStringify from "rehype-stringify";
+import rehypeSlug from "rehype-slug";
+import rehypeAutoLink from "rehype-autolink-headings";
+
+const remarkPlugins = undefined;
+const rehypePlugins = [
+  rehypeStringify,
+  rehypeSlug,
+  [
+    rehypeAutoLink,
+    {
+      behavior: "wrap",
+      properties: { class: "hover:text-yellow-100 no-underline" },
+    },
+  ],
+];
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   if (params.chat) {
@@ -25,13 +42,12 @@ export const load: PageServerLoad = async ({ params, locals }) => {
         chat.messages.forEach((e) => {
           e.own = e.authorId == user.id;
           e.liked = e.likedBy.find((usr) => usr.id == user.id) != undefined;
-          console.log(e.liked);
         });
 
         return { chat };
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
       throw error(404, "database items not found");
     }
   }
@@ -55,8 +71,27 @@ export const actions: Actions = {
             where: { session: locals.session },
           });
           try {
+            const markdownmessage = (
+              await compile(
+                message,
+                remarkPlugins,
+                // @ts-ignore
+                rehypePlugins
+              )
+            )?.code
+              // https://github.com/pngwn/MDsveX/issues/392
+              .replace(
+                />{@html `<code class="language-/g,
+                '><code class="language-'
+              )
+              .replace(/<\/code>`}<\/pre>/g, "</code></pre>");
+
             const msg = await database.message.create({
-              data: { authorId: user?.id, chatId: chat.id, content: message },
+              data: {
+                authorId: user?.id,
+                chatId: chat.id,
+                content: markdownmessage ?? message,
+              },
               include: {
                 author: { select: { username: true, id: true } },
                 likedBy: { select: { id: true } },

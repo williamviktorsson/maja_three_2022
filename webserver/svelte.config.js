@@ -1,6 +1,10 @@
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
 import { mdsvex } from 'mdsvex'
+import remarkGithub from 'remark-github';
+import remarkAbbr from 'remark-abbr';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 
 
@@ -16,7 +20,26 @@ const config = {
 	kit: {
 		adapter: adapter()
 	},
-	extensions: ['.svelte', '.md', '.svx']
+	extensions: ['.svelte', '.md', '.svx'],
+	remarkPlugins: [
+		[
+			remarkGithub,
+			{
+				// Use your own repository
+				repository: 'https://github.com/williamviktorsson/williamviktorsson.github.io.git'
+			}
+		],
+		remarkAbbr
+	],
+	rehypePlugins: [
+		rehypeSlug,
+		[
+			rehypeAutolinkHeadings,
+			{
+				behavior: 'wrap'
+			}
+		]
+	]
 
 };
 

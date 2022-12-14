@@ -5,11 +5,14 @@
   import { page } from "$app/stores";
   import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
-
+	import 'prism-themes/themes/prism-one-dark.css';
+  
   export let data: PageServerData;
   export let form: ActionData;
 
   $: messages = [...data.chat.messages].reverse();
+
+  let formRef: HTMLFormElement;
 
   if (browser) {
     const ac = new AbortController();
@@ -28,10 +31,10 @@
           .getReader();
 
         while (reader) {
-          /* read stuff indefinitely */ 
+          /* read stuff indefinitely */
           const { value, done } = await reader.read();
           if (done) break;
-
+          console.log("javascript clearly running");
           const message = JSON.parse(value);
 
           /* add the new message */
@@ -71,7 +74,7 @@
     {#each messages as message}
       <div class="message" class:own={message.own}>
         <p>
-          {message.content}
+          {@html message.content}
         </p>
         <i
           >{message.own
@@ -96,8 +99,19 @@
 
 <hr />
 
-<form use:enhance method="post" action="?/write">
-  <input type="text" name="message" placeholder="message" id="" />
+<form bind:this={formRef} use:enhance method="post" action="?/write">
+  <textarea
+    on:keypress={(e) => {
+      if (e.code == "Enter" && e.shiftKey == false) {
+        e.preventDefault();
+        formRef.submit();
+      }
+    }}
+    type="text"
+    name="message"
+    placeholder="message"
+    id=""
+  />
   <button type="submit">write message</button>
   {#if form?.error}
     {form.error}
@@ -108,7 +122,7 @@
   .chat {
     display: flex;
     flex-direction: column-reverse;
-    max-height: 40vh;
+    max-height: 60vh;
     overflow-y: scroll;
   }
 
@@ -124,5 +138,9 @@
   .message.own {
     place-items: end;
     background-color: rgba(95, 158, 160, 0.3);
+  }
+
+  textarea {
+    resize: none;
   }
 </style>

@@ -212,7 +212,7 @@ export const actions: Actions = {
     const host = data.get("host")?.toString();
 
     if (!host) {
-      throw fail(404, { message: "host not supplied" });
+      return fail(404, { message: "host not supplied" });
     }
 
     const results: Record<string, string[]> = {};

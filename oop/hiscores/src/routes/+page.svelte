@@ -22,7 +22,7 @@
           running = true;
         }
         return async ({ update }) => {
-          await update();
+          await update({ reset: false });
           running = false;
         };
       }}
@@ -36,6 +36,12 @@
       </button>
     </form>
   </div>
+  {#if form?.message}
+    <hr />
+    <h1>TEST RUN FAILIRE</h1>
+    <hr />
+    <h2>{form.message}</h2>
+  {/if}
   {#if form?.sqlite}
     <hr />
     <h1>SQLITE RESULTS</h1>

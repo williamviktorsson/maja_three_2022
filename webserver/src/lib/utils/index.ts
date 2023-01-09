@@ -5,10 +5,9 @@ export const fetchMarkdownPosts = async () => {
   const allPosts = await Promise.all(
     iterablePostFiles.map(async ([path, resolver]) => {
       const { metadata } = (await resolver()) as any;
-      console.log(path)
-      const id = path.slice(15, -4);
-      console.log(id);
-      const postPath = `/blog/${id}`;
+      /* remove the path part and the end part */
+      const id = path.slice("/src/lib/posts/".length, ".svx".length * -1);
+      const postPath = `${id}`;
       return {
         meta: metadata,
         path: postPath,

@@ -1,4 +1,4 @@
-import { error, invalid, type Actions } from "@sveltejs/kit";
+import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { database } from "$lib/database";
 import { streams } from "./+server";
@@ -61,7 +61,7 @@ export const actions: Actions = {
       const form = await request.formData();
       const message = form.get("message")?.toString();
       if (!message) {
-        return invalid(400, { error: "missing message" });
+        return fail(400, { error: "missing message" });
       } else {
         const chat = await database.chat.findUnique({
           where: { id: Number(params.chat) },
@@ -107,7 +107,7 @@ export const actions: Actions = {
               }
             }
           } catch (e) {
-            return invalid(400, { error: "message creation error" });
+            return fail(400, { error: "message creation error" });
           }
         }
       }
@@ -118,7 +118,7 @@ export const actions: Actions = {
       const form = await request.formData();
       const messageId = form.get("messageId")?.toString();
       if (!messageId) {
-        return invalid(400, { error: "missing messageId" });
+        return fail(400, { error: "missing messageId" });
       } else {
         const chat = await database.chat.findUnique({
           where: { id: Number(params.chat) },
@@ -137,7 +137,7 @@ export const actions: Actions = {
             });
           } catch (e) {
             console.log(e);
-            return invalid(400, { error: "message like error" });
+            return fail(400, { error: "message like error" });
           }
         }
       }
@@ -148,7 +148,7 @@ export const actions: Actions = {
       const form = await request.formData();
       const messageId = form.get("messageId")?.toString();
       if (!messageId) {
-        return invalid(400, { error: "missing messageId" });
+        return fail(400, { error: "missing messageId" });
       } else {
         const chat = await database.chat.findUnique({
           where: { id: Number(params.chat) },
@@ -167,7 +167,7 @@ export const actions: Actions = {
             });
           } catch (e) {
             console.log(e);
-            return invalid(400, { error: "message unlike error" });
+            return fail(400, { error: "message unlike error" });
           }
         }
       }

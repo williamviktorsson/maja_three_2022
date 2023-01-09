@@ -1,7 +1,7 @@
-import { invalid, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 import { database } from "$lib/database";
-import * as crypto from "crypto"
+import * as crypto from "crypto";
 
 export const actions: Actions = {
   login: async ({ request, locals, cookies }) => {
@@ -12,14 +12,14 @@ export const actions: Actions = {
 
     // TODO: Implement login
     // Check if password and username
-    // exists and is correct
+    // exists and is correct'
 
     if (!username) {
-      return invalid(400, { username: "username missing" });
+      return fail(400, { username: "username missing" });
     }
 
     if (!password) {
-      return invalid(400, { password: "password missing" });
+      return fail(400, { password: "password missing" });
     }
 
     try {
@@ -27,20 +27,22 @@ export const actions: Actions = {
         where: { username },
       });
 
-      console.log(result)
+      console.log(result);
 
       if (!result) {
-        return invalid(400, {
+        return fail(400, {
           user: "wrong username + password combination",
         });
       }
 
-      const {salt, hash} = result;
+      const { salt, hash } = result;
 
-      const newhash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+      const newhash = crypto
+        .pbkdf2Sync(password, salt, 1000, 64, "sha512")
+        .toString("hex");
 
-      if (newhash!=hash) {
-        return invalid(400, {
+      if (newhash != hash) {
+        return fail(400, {
           user: "wrong username + password combination",
         });
       }
@@ -62,8 +64,8 @@ export const actions: Actions = {
         maxAge: 1200, //
       });
     } catch (e) {
-      console.log(e)
-      return invalid(400, { server: "database connection error" });
+      console.log(e);
+      return fail(400, { server: "database connection error" });
     }
 
     throw redirect(302, "/");

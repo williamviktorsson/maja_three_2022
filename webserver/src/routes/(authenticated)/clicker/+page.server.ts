@@ -20,7 +20,7 @@ export const actions: Actions = {
     });
 
     if (!user) {
-      return invalid(404, { error: "user not found" });
+      return fail(404, { error: "user not found" });
     }
     const clicks = await database.clicker.upsert({
       where: { userId: user?.id },

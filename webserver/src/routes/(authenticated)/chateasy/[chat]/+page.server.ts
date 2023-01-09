@@ -1,4 +1,4 @@
-import { error, invalid, type Actions } from "@sveltejs/kit";
+import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { database } from "$lib/database";
 import { streams } from "./+server";
@@ -28,7 +28,7 @@ export const actions: Actions = {
     const form = await request.formData();
     const message = form.get("message")?.toString();
     if (!message) {
-      return invalid(400, { error: "missing message" });
+      return fail(400, { error: "missing message" });
     }
 
     // what chat are we writing to ?

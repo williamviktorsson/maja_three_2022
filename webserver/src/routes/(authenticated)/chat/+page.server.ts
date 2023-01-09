@@ -1,4 +1,4 @@
-import { invalid, type Actions } from "@sveltejs/kit";
+import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { database } from "$lib/database";
 
@@ -19,14 +19,14 @@ export const actions: Actions = {
     const form = await request.formData();
     const forumname = form.get("chatname")?.toString();
     if (!forumname) {
-      return invalid(400, { error: "missing chat name" });
+      return fail(400, { error: "missing chat name" });
     } else {
       try {
         await database.chat.create({
           data: { name: forumname },
         });
       } catch (e) {
-        return invalid(400, { error: "chat creation error" });
+        return fail(400, { error: "chat creation error" });
       }
     }
   },
@@ -34,7 +34,7 @@ export const actions: Actions = {
     const form = await request.formData();
     const chatId = form.get("chatId")?.toString();
     if (!chatId) {
-      return invalid(400, { error: "missing chatId" });
+      return fail(400, { error: "missing chatId" });
     } else {
       try {
         const user = await database.user.findUniqueOrThrow({
@@ -53,7 +53,7 @@ export const actions: Actions = {
         });
       } catch (e) {
         console.log(e);
-        return invalid(400, { error: "chat favorite error" + e });
+        return fail(400, { error: "chat favorite error" + e });
       }
     }
   },
@@ -61,7 +61,7 @@ export const actions: Actions = {
     const form = await request.formData();
     const chatId = form.get("chatId")?.toString();
     if (!chatId) {
-      return invalid(400, { error: "missing chatId" });
+      return fail(400, { error: "missing chatId" });
     } else {
       try {
         const user = await database.user.findUniqueOrThrow({
@@ -80,7 +80,7 @@ export const actions: Actions = {
         });
       } catch (e) {
         console.log(e);
-        return invalid(400, { error: "chat favorite error" + e });
+        return fail(400, { error: "chat favorite error" + e });
       }
     }
   },

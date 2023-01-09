@@ -16,7 +16,7 @@ export const actions: Actions = {
     if (clickies.at(index) != undefined) {
       clickies[index]++;
     } else {
-      return invalid(400, { error: "index wong" });
+      return fail(400, { error: "index wong" });
     }
   },
 
@@ -27,7 +27,7 @@ export const actions: Actions = {
     if (clickies.at(index) != undefined) {
       clickies.splice(index, 1);
     } else {
-      return invalid(400, { error: "index wong" });
+      return fail(400, { error: "index wong" });
     }
   },
   add: async ({ locals, request }) => {

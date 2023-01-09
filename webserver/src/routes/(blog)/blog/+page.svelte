@@ -10,7 +10,7 @@
   {#each data.posts as post}
     <li>
       <h2>
-        <a href={post.path}>
+        <a href={"/blog/"+post.path}>
           {post.meta.title}
         </a>
       </h2>

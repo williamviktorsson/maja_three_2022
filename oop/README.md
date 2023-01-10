@@ -6,6 +6,7 @@ Undervisningen i kursen ska behandla följande centrala innehåll:
     Objekt - instans av klass
     Egenskaper - Attribut/Variabler. Databärande innehåll som hör till klassen.
     Metoder - funktioner som objekt av klassen kan exekvera. Dessa metoder ändrar oftast på egenskaper/attribut i objektet.
+    Interface - mall för klass
 
 # Arv, inkapsling och polymorfism.
 

@@ -51,7 +51,7 @@ De vanligaste exempelen på starkt typade språk är de som har statisk typning 
 
 # Identifierares synlighet och livslängd.
 
-Ett objekt har aldrig samma identitet som ett annat objekt. Det är något som unikt identifierar en instans av ett objekt. Två instanser kan vara likadana om deras innehåll är likadana. Då implementerar vi ofta en equals funktion för att jämföra objekt av den typen. Men två objekt ska aldrig kunna vara lika med varandra. Två identifierare kan dock identifiera samma objekt.
+Ett objekt har aldrig samma identitet som ett annat objekt. Det är något som unikt identifierar en instans av ett objekt. Två instanser kan vara likadana om deras innehåll är likadana. Då implementerar vi ofta en equals funktion för att jämföra objekt av den typen. Två identifierare kan dock identifiera samma objekt.
 
 Konceptuellt handlar detta om variabler vars värden är objekt.
 

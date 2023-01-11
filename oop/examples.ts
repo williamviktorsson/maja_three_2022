@@ -1,6 +1,5 @@
 /* EXAMPLE INTERFACE */
 
-import { threadId } from "worker_threads";
 
 // TODO: WRITE CODE HE
 

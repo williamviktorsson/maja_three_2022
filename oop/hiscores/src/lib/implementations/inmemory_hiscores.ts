@@ -1,4 +1,5 @@
 import { Implementation, type Hiscores } from "$lib/do_not_modify/hiscores";
+import type { Leaderboard } from "$lib/do_not_modify/leaderboard";
 import { JumpPlayer } from "$lib/do_not_modify/player";
 import { DefaultRank } from "$lib/do_not_modify/rank";
 import type {
@@ -17,6 +18,8 @@ import type {
 } from "$lib/do_not_modify/requests";
 import { JumpScore } from "$lib/do_not_modify/score";
 
+let leaderboards: Map<string, Leaderboard> = new Map<string, Leaderboard>();
+
 export class InMemoryHiscores implements Hiscores {
   implementation: Implementation = Implementation.INMEMORY;
 
@@ -29,8 +32,8 @@ export class InMemoryHiscores implements Hiscores {
     console.log(request);
 
     const response: GetLeaderboardsResponse = {
-      success: false,
-      leaderboards: [],
+      success: true,
+      leaderboards: [...leaderboards.keys()],
     };
 
     return response;

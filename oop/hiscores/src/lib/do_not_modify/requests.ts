@@ -24,6 +24,10 @@ export type DeleteLeaderboardRequest = {
   leaderboard_id: string;
 };
 
+export type DeleteLeaderboardResponse = {
+  success: boolean;
+};
+
 // GET /scores
 export type GetScoresRequest = {
   leaderboard_id: string; // query param
@@ -47,9 +51,7 @@ export type SubmitScoreResponse = {
   rank: Rank;
 };
 
-export type DeleteLeaderboardResponse = {
-  success: boolean;
-};
+
 
 // GET /ranks
 export type GetRanksForPlayerRequest = {

@@ -22,7 +22,7 @@
           running = true;
         }
         return async ({ update }) => {
-          await update();
+          await update({ reset: false });
           running = false;
         };
       }}

@@ -1,35 +1,27 @@
 import { fail, redirect } from "@sveltejs/kit";
-import type { Actions, PageServerLoad } from "./$types";
-import { database } from "$lib/database";
-import * as crypto from "crypto";
-
-type ValidationReturn = { result: any; status: boolean }
-
-let test: Array<string> = []
-test.push
-
-class LoginValidation {
-
-  /**
-   * it validates, duh
-   * @param form the stuff i need
-   * @returns the stuff u get
-   */
-  static validate(form: any): ValidationReturn {
-    return { result: {}, status: true };
-  }
-}
+import type { Actions } from "./$types";
+import { auth } from "$lib/auth";
 
 export const actions: Actions = {
-  login: async ({ request, locals, cookies }) => {
+  login: async ({ request, cookies }) => {
     const form = await request.formData();
 
-    let { result, status } = LoginValidation.validate(form);
-
-    if (!status) {
-      throw fail(result.code, result.data);
+    const {success,error} = await auth.login(form);
+    
+    if (error) {
+      return fail(error.code, error.data);
     }
 
-    throw redirect(302, "/");
+    else {
+      cookies.set("session", success.session, {
+        path: "/",
+        httpOnly: true, // optional for now
+        sameSite: "strict", // optional for now
+        secure: process.env.NODE_ENV === "production", // optional for now
+        maxAge: 1200, //
+      });
+      throw redirect(302, "/");
+    }
+
   },
 };

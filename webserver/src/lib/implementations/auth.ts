@@ -27,7 +27,7 @@ export class SQLiteAuth implements Auth {
         return {
           error: {
             code: 400,
-            data: { user: "wrong username + password combination" },
+            data: { user: "wrong credentials" },
           },
         };
       }
@@ -42,7 +42,7 @@ export class SQLiteAuth implements Auth {
         return {
           error: {
             code: 400,
-            data: { user: "wrong username + password combination" },
+            data: { user: "wrong credentials" },
           },
         };
       }

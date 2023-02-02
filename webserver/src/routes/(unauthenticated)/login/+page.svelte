@@ -3,7 +3,7 @@
 	import type { ActionData, PageServerData } from "./$types";
 
 	export let form: ActionData;
-
+	let count = 0
 </script>
 
 <form use:enhance method="POST" action="?/login">
@@ -23,3 +23,8 @@
 		<p>{form?.server}</p>
 	{/if}
 </form>
+
+<button on:click={() => count++}>
+	{count
+	}
+</button>

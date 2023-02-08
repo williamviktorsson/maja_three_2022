@@ -34,6 +34,7 @@
 		"remark-slug": "^7.0.1",
 		"remark-toc": "^8.0.1"
 	},
+	"type": "module",
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.5.9",
 		"@prisma/client": "^4.4.0",

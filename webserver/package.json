@@ -9,8 +9,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-node": "latest",
-		"@sveltejs/kit": "latest",
+		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/kit": "^1.5.0",
 		"@types/cookie": "^0.5.1",
 		"mdsvex": "^0.10.6",
 		"mongodb": "^4.9.1",

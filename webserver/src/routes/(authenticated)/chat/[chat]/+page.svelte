@@ -107,7 +107,6 @@
         formRef.submit();
       }
     }}
-    type="text"
     name="message"
     placeholder="message"
     id=""

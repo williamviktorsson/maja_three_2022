@@ -6,6 +6,7 @@ import { compile } from "mdsvex";
 import rehypeStringify from "rehype-stringify";
 import rehypeSlug from "rehype-slug";
 import rehypeAutoLink from "rehype-autolink-headings";
+import { browser } from "$app/environment";
 
 const remarkPlugins = undefined;
 const rehypePlugins = [
@@ -71,7 +72,8 @@ export const actions: Actions = {
             where: { session: locals.session },
           });
           try {
-            const markdownmessage = (
+            
+ /*            const markdownmessage = (
               await compile(
                 message,
                 remarkPlugins,
@@ -84,13 +86,13 @@ export const actions: Actions = {
                 />{@html `<code class="language-/g,
                 '><code class="language-'
               )
-              .replace(/<\/code>`}<\/pre>/g, "</code></pre>");
+              .replace(/<\/code>`}<\/pre>/g, "</code></pre>"); */
 
             const msg = await database.message.create({
               data: {
                 authorId: user?.id,
                 chatId: chat.id,
-                content: markdownmessage ?? message,
+                content: /* markdownmessage ??  */ message,
               },
               include: {
                 author: { select: { username: true, id: true } },
@@ -107,7 +109,7 @@ export const actions: Actions = {
               }
             }
           } catch (e) {
-            console.log(e)
+            console.log(e);
             return fail(400, { error: "message creation error" });
           }
         }

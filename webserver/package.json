@@ -4,16 +4,15 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview --host 10000",
+		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "latest",
-		"@sveltejs/kit": "^1.5.0",
+		"@sveltejs/kit": "latest",
 		"@types/cookie": "^0.5.1",
 		"mdsvex": "^0.10.6",
-		"mongodb": "^4.9.1",
 		"prisma": "^4.4.0",
 		"svelte": "^3.50.1",
 		"svelte-check": "latest",

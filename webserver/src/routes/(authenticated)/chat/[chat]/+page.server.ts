@@ -107,6 +107,7 @@ export const actions: Actions = {
               }
             }
           } catch (e) {
+            console.log(e)
             return fail(400, { error: "message creation error" });
           }
         }

@@ -1,14 +1,12 @@
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { database } from "$lib/database";
-
-export const streams: Record<
-  string,
-  { controller: ReadableStreamDefaultController<string>; chat: string }
-> = {};
+import { database, streams } from "$lib/database";
 
 export const GET: RequestHandler = async ({ locals, params }) => {
   if (params.chat) {
+    if (!(params.chat in streams)) {
+      streams[params.chat] = {};
+    }
     try {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
@@ -18,11 +16,12 @@ export const GET: RequestHandler = async ({ locals, params }) => {
           where: { session: locals.session },
         });
 
-        const stream = new ReadableStream<string>({
+        const stream = new ReadableStream({
           start(controller) {
             /* save the controller for the stream so that we can */
             /* enqueue messages into the stream */
-            streams[locals.session!] = { controller, chat: params.chat };
+            const stream = streams[params.chat];
+            stream[locals.session!] = { controller, chat: params.chat };
           },
           cancel() {
             /* remove the stream */

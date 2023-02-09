@@ -1,28 +1,12 @@
 import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { database } from "$lib/database";
-import { streams } from "./+server";
-import { compile } from "mdsvex";
-import rehypeStringify from "rehype-stringify";
-import rehypeSlug from "rehype-slug";
-import rehypeAutoLink from "rehype-autolink-headings";
-import { browser } from "$app/environment";
-
-const remarkPlugins = undefined;
-const rehypePlugins = [
-  rehypeStringify,
-  rehypeSlug,
-  [
-    rehypeAutoLink,
-    {
-      behavior: "wrap",
-      properties: { class: "hover:text-yellow-100 no-underline" },
-    },
-  ],
-];
+import { database, streams } from "$lib/database";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   if (params.chat) {
+    if (!(params.chat in streams)) {
+      streams[params.chat] = {};
+    }
     try {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
@@ -59,6 +43,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
   write: async ({ request, params, locals }) => {
     if (params.chat) {
+      if (!(params.chat in streams)) {
+        streams[params.chat] = {};
+      }
       const form = await request.formData();
       const message = form.get("message")?.toString();
       if (!message) {
@@ -72,8 +59,7 @@ export const actions: Actions = {
             where: { session: locals.session },
           });
           try {
-            
- /*            const markdownmessage = (
+            /*            const markdownmessage = (
               await compile(
                 message,
                 remarkPlugins,
@@ -100,12 +86,19 @@ export const actions: Actions = {
               },
             });
 
-            for (const session in streams) {
+            const encoder = new TextEncoder();
+            const stream = streams[params.chat];
+
+            for (const session in stream) {
               /* send messages to all other streams exept own for this chat */
-              const connection = streams[session];
+
+              const connection = stream[session];
+
               if (connection.chat == params.chat && session != locals.session) {
                 /* enqueue messages to all streams for this chat */
-                connection.controller.enqueue(JSON.stringify(msg));
+                connection.controller.enqueue(
+                  encoder.encode("data: " + JSON.stringify(msg) + "\n\n")
+                );
               }
             }
           } catch (e) {

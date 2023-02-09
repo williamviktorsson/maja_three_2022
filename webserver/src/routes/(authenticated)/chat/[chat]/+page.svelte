@@ -12,55 +12,22 @@
   $: messages = [...data.chat.messages].reverse();
 
   if (browser) {
-    const ac = new AbortController();
-    const signal = ac.signal;
+    let events: EventSource;
 
-    async function stream() {
-      try {
-        /* GET request to +server.ts */
-        const response = await fetch("/chat/" + $page.params.chat, {
-          signal,
-        });
+    events = new EventSource(`/chat/${$page.params.chat}`);
+    events.onmessage = (event) => {
+      const message = JSON.parse(event.data);
 
-        /* get the reader for events */
-        const reader = response.body
-          ?.pipeThrough(new TextDecoderStream())
-          .getReader();
-
-        while (reader) {
-          /* read stuff indefinitely */
-          const { value, done } = await reader.read();
-          if (done) break;
-          console.log("javascript clearly running");
-          const message = JSON.parse(value);
-
-          /* add the new message */
-          if (message) {
-            message.timestamp = new Date(message.timestamp.toString());
-            messages = [message, ...messages];
-          }
-        }
-        ac.abort();
-      } catch (e) {
-        console.log("error stream closure");
+      /* add the new message */
+      if (message) {
+        message.timestamp = new Date(message.timestamp.toString());
+        messages = [message, ...messages];
       }
-    }
-    stream();
+    };
 
     onDestroy(() => {
-      ac.abort();
+      events.close();
     });
-
-    // https://kit.svelte.dev/faq#how-do-i-use-a-client-side-only-library-that-depends-on-document-or-window
-    /*     if (browser) {
-      const interval = setInterval(() => {
-        // run load function every sec lol 
-        // https://kit.svelte.dev/docs/modules#$app-navigation-invalidateall
-        invalidateAll();
-      }, 1000);
-
-      onDestroy(() => clearInterval(interval));
-    } */
   }
 </script>
 

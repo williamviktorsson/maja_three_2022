@@ -25,7 +25,8 @@ export const GET: RequestHandler = async ({ locals, params }) => {
           },
           cancel() {
             /* remove the stream */
-            delete streams[locals.session!];
+            const stream = streams[params.chat];
+            delete stream[locals.session!];
           },
         });
 

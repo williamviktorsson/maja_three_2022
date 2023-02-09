@@ -1,18 +1,15 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
-	import 'prism-themes/themes/prism-one-dark.css';
-  
+  import "prism-themes/themes/prism-one-dark.css";
+
   export let data: PageServerData;
   export let form: ActionData;
 
   $: messages = [...data.chat.messages].reverse();
-
-  let formRef: HTMLFormElement;
 
   if (browser) {
     const ac = new AbortController();
@@ -99,22 +96,13 @@
 
 <hr />
 
-<form bind:this={formRef} use:enhance method="post" action="?/write">
-  <textarea
-    on:keypress={(e) => {
-      if (e.code == "Enter" && e.shiftKey == false) {
-        e.preventDefault();
-        formRef.submit();
-      }
-    }}
-    name="message"
-    placeholder="message"
-    id=""
-  />
+<form use:enhance method="post" action="?/write">
+  <input type="text" name="message" placeholder="message" id="" />
   <button type="submit">write message</button>
   {#if form?.error}
     {form.error}
   {/if}
+  <input type="submit" hidden />
 </form>
 
 <style>

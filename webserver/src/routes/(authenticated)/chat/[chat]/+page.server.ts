@@ -81,6 +81,11 @@ export const actions: Actions = {
             });
 
             const encoder = new TextEncoder();
+            const encoded = encoder.encode(
+              "data: " + JSON.stringify(msg) + "\n\n"
+            );
+
+            console.log(streams);
 
             for (const session in streams) {
               /* send messages to all other streams exept own for this chat */
@@ -90,9 +95,7 @@ export const actions: Actions = {
               if (connection.chat == params.chat && session != locals.session) {
                 /* enqueue messages to all streams for this chat */
                 try {
-                  connection.controller.enqueue(
-                    encoder.encode("data: " + JSON.stringify(msg) + "\n\n")
-                  );
+                  connection.controller.enqueue(encoded);
                 } catch (e) {
                   console.error("Failure sending sse over connection : " + e);
                 }
@@ -118,7 +121,6 @@ export const actions: Actions = {
         });
         if (chat?.id == Number(params.chat)) {
           try {
-            console.log(messageId);
             const message = await database.message.findUniqueOrThrow({
               where: { id: Number(messageId) },
             });
@@ -148,7 +150,6 @@ export const actions: Actions = {
         });
         if (chat?.id == Number(params.chat)) {
           try {
-            console.log(messageId);
             const message = await database.message.findUniqueOrThrow({
               where: { id: Number(messageId) },
             });

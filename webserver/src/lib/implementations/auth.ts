@@ -1,5 +1,5 @@
 import type { Auth, LoginResult } from "$lib/interfaces/auth";
-import { database } from "$lib/database";
+import { database } from "$lib/ssr";
 import * as crypto from "crypto";
 
 export class SQLiteAuth implements Auth {

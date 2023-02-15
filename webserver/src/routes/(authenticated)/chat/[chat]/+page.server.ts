@@ -1,12 +1,9 @@
 import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { database, streams } from "$lib/database";
+import { database, streams } from "$lib/ssr";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   if (params.chat) {
-    if (!(params.chat in streams)) {
-      streams[params.chat] = {};
-    }
     try {
       const chat = await database.chat.findUniqueOrThrow({
         where: { id: Number(params.chat) },
@@ -43,9 +40,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 export const actions: Actions = {
   write: async ({ request, params, locals }) => {
     if (params.chat) {
-      if (!(params.chat in streams)) {
-        streams[params.chat] = {};
-      }
       const form = await request.formData();
       const message = form.get("message")?.toString();
       if (!message) {
@@ -87,18 +81,21 @@ export const actions: Actions = {
             });
 
             const encoder = new TextEncoder();
-            const stream = streams[params.chat];
 
-            for (const session in stream) {
+            for (const session in streams) {
               /* send messages to all other streams exept own for this chat */
 
-              const connection = stream[session];
+              const connection = streams[session];
 
               if (connection.chat == params.chat && session != locals.session) {
                 /* enqueue messages to all streams for this chat */
-                connection.controller.enqueue(
-                  encoder.encode("data: " + JSON.stringify(msg) + "\n\n")
-                );
+                try {
+                  connection.controller.enqueue(
+                    encoder.encode("data: " + JSON.stringify(msg) + "\n\n")
+                  );
+                } catch (e) {
+                  console.error("Failure sending sse over connection : " + e);
+                }
               }
             }
           } catch (e) {

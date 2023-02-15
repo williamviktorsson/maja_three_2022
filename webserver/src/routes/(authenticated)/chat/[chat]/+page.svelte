@@ -5,6 +5,7 @@
   import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
   import "prism-themes/themes/prism-one-dark.css";
+  import ReconnectingEventSource from "reconnecting-eventsource";
 
   export let data: PageServerData;
   export let form: ActionData;
@@ -12,10 +13,10 @@
   $: messages = [...data.chat.messages].reverse();
 
   if (browser) {
-    let events: EventSource;
+    let es: ReconnectingEventSource;
 
-    events = new EventSource(`/chat/${$page.params.chat}`);
-    events.onmessage = (event) => {
+    es = new ReconnectingEventSource(`/chat/${$page.params.chat}`);
+    es.onmessage = (event) => {
       const message = JSON.parse(event.data);
 
       /* add the new message */
@@ -26,7 +27,7 @@
     };
 
     onDestroy(() => {
-      events.close();
+      es.close();
     });
   }
 </script>

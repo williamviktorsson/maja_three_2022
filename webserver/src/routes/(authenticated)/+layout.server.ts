@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import { database } from "$lib/database";
+import { database } from "$lib/ssr";
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
   if (locals.session) {

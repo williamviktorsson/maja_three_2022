@@ -1,5 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
-import { database, init_ssr } from "$lib/database";
+import { database, init_ssr } from "$lib/ssr";
 
 init_ssr();
 

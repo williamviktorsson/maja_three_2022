@@ -1,6 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import { database } from "$lib/database";
+import { database } from "$lib/ssr";
 
 export const actions: Actions = {
   logout: async ({ request, locals, cookies }) => {

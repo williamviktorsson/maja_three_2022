@@ -10,6 +10,8 @@
   export let data: PageServerData;
   export let form: ActionData;
 
+  let inputRef: HTMLElement;
+
   $: messages = [...data.chat.messages].reverse();
 
   if (browser) {
@@ -64,8 +66,23 @@
 
 <hr />
 
-<form use:enhance method="post" action="?/write">
-  <input type="text" name="message" placeholder="message" id="" />
+<form
+  use:enhance={({}) => {
+    return async ({ update }) => {
+      await update(); // Call the default behavior of a form submission response.
+      inputRef.focus(); // focus the input field
+    };
+  }}
+  method="post"
+  action="?/write"
+>
+  <input
+    bind:this={inputRef}
+    type="text"
+    name="message"
+    placeholder="message"
+    id=""
+  />
   <button type="submit">write message</button>
   {#if form?.error}
     {form.error}

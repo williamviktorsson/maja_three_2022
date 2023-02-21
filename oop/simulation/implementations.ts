@@ -9,13 +9,13 @@ import {
 } from "./interfaces";
 
 export class Math implements Study {
-  difficulty: Number = 9001;
+  difficulty: number = 9001;
   affects: Experience[] = [{ name: "logic", value: 100 }];
 }
 
 export class School implements Building {
   occupants: Person[] = [];
-  capacity: Number = 1000;
+  capacity: number = 1000;
   studies: Study[] = [];
   enter(person: Person): boolean {
     throw new Error("Method not implemented.");
@@ -24,9 +24,9 @@ export class School implements Building {
 
 class William implements Person {
   knowledge: Experience[] = [];
-  hunger: Number = 1000;
-  happiness: Number = 1000;
-  fitness: Number = 20;
+  hunger: number = 1000;
+  happiness: number = 1000;
+  fitness: number = 20;
   move(location: Building): boolean {
     throw new Error("Method not implemented.");
   }

@@ -8,9 +8,9 @@ export interface Simulation {
 
 export interface Person {
   knowledge: Experience[];
-  hunger: Number;
-  happiness: Number;
-  fitness: Number;
+  hunger: number;
+  happiness: number;
+  fitness: number;
 
   move(location: Building): boolean;
   perform(activity: Activity): boolean;
@@ -27,8 +27,8 @@ export interface Activity {
 }
 
 export interface Reward {
-  happiness: Number;
-  fitness: Number;
+  happiness: number;
+  fitness: number;
 }
 
 export interface Hobby extends Activity {
@@ -36,16 +36,16 @@ export interface Hobby extends Activity {
 }
 
 export interface Study extends Activity {
-  difficulty: Number;
+  difficulty: number;
 }
 
 export interface Building {
   occupants: Person[];
-  capacity: Number;
+  capacity: number;
   enter(person: Person): boolean;
 }
 
 export interface Food {
-  calories: Number;
-  split(percentage: Number): boolean;
+  calories: number;
+  split(percentage: number): boolean;
 }

@@ -1,11 +1,6 @@
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { database } from "$lib/database";
-
-export const streams: Record<
-  string,
-  { controller: ReadableStreamDefaultController<string>; chat: string }
-> = {};
+import { database, streams } from "$lib/ssr";
 
 export const GET: RequestHandler = async ({ locals, params }) => {
   if (params.chat) {
@@ -18,7 +13,7 @@ export const GET: RequestHandler = async ({ locals, params }) => {
           where: { session: locals.session },
         });
 
-        const stream = new ReadableStream<string>({
+        const stream = new ReadableStream({
           start(controller) {
             /* save the controller for the stream so that we can */
             /* enqueue messages into the stream */
@@ -26,6 +21,7 @@ export const GET: RequestHandler = async ({ locals, params }) => {
           },
           cancel() {
             /* remove the stream */
+            const stream = streams[params.chat];
             delete streams[locals.session!];
           },
         });

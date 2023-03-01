@@ -1,24 +1,6 @@
 import { error, fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { database } from "$lib/database";
-import { streams } from "./+server";
-import { compile } from "mdsvex";
-import rehypeStringify from "rehype-stringify";
-import rehypeSlug from "rehype-slug";
-import rehypeAutoLink from "rehype-autolink-headings";
-
-const remarkPlugins = undefined;
-const rehypePlugins = [
-  rehypeStringify,
-  rehypeSlug,
-  [
-    rehypeAutoLink,
-    {
-      behavior: "wrap",
-      properties: { class: "hover:text-yellow-100 no-underline" },
-    },
-  ],
-];
+import { database, streams } from "$lib/ssr";
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   if (params.chat) {
@@ -71,7 +53,7 @@ export const actions: Actions = {
             where: { session: locals.session },
           });
           try {
-            const markdownmessage = (
+            /*            const markdownmessage = (
               await compile(
                 message,
                 remarkPlugins,
@@ -84,13 +66,13 @@ export const actions: Actions = {
                 />{@html `<code class="language-/g,
                 '><code class="language-'
               )
-              .replace(/<\/code>`}<\/pre>/g, "</code></pre>");
+              .replace(/<\/code>`}<\/pre>/g, "</code></pre>"); */
 
             const msg = await database.message.create({
               data: {
                 authorId: user?.id,
                 chatId: chat.id,
-                content: markdownmessage ?? message,
+                content: /* markdownmessage ??  */ message,
               },
               include: {
                 author: { select: { username: true, id: true } },
@@ -98,15 +80,29 @@ export const actions: Actions = {
               },
             });
 
+            const encoder = new TextEncoder();
+            const encoded = encoder.encode(
+              "data: " + JSON.stringify(msg) + "\n\n"
+            );
+
+            console.log(streams);
+
             for (const session in streams) {
               /* send messages to all other streams exept own for this chat */
+
               const connection = streams[session];
+
               if (connection.chat == params.chat && session != locals.session) {
                 /* enqueue messages to all streams for this chat */
-                connection.controller.enqueue(JSON.stringify(msg));
+                try {
+                  connection.controller.enqueue(encoded);
+                } catch (e) {
+                  console.error("Failure sending sse over connection : " + e);
+                }
               }
             }
           } catch (e) {
+            console.log(e);
             return fail(400, { error: "message creation error" });
           }
         }
@@ -125,7 +121,6 @@ export const actions: Actions = {
         });
         if (chat?.id == Number(params.chat)) {
           try {
-            console.log(messageId);
             const message = await database.message.findUniqueOrThrow({
               where: { id: Number(messageId) },
             });
@@ -155,7 +150,6 @@ export const actions: Actions = {
         });
         if (chat?.id == Number(params.chat)) {
           try {
-            console.log(messageId);
             const message = await database.message.findUniqueOrThrow({
               where: { id: Number(messageId) },
             });

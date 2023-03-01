@@ -1,4 +1,4 @@
-import { database } from "$lib/database";
+import { database } from "$lib/ssr";
 import { redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import * as crypto from "crypto";

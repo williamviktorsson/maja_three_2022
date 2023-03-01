@@ -9,9 +9,7 @@
   <a href="/settings">Settings</a>
 
   <a href="/chat">Chat</a>
-
-  <a href="/forums">Forums</a>
-
+  
   <a href="/clicker">Clicker</a>
 
   <a href="/blog">Blog</a>

@@ -1,69 +1,36 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
   import { onDestroy } from "svelte";
   import type { ActionData, PageServerData } from "./$types";
-	import 'prism-themes/themes/prism-one-dark.css';
-  
+  import "prism-themes/themes/prism-one-dark.css";
+  import ReconnectingEventSource from "reconnecting-eventsource";
+
   export let data: PageServerData;
   export let form: ActionData;
 
+  let inputRef: HTMLElement;
+
   $: messages = [...data.chat.messages].reverse();
 
-  let formRef: HTMLFormElement;
-
   if (browser) {
-    const ac = new AbortController();
-    const signal = ac.signal;
+    let es: ReconnectingEventSource;
 
-    async function stream() {
-      try {
-        /* GET request to +server.ts */
-        const response = await fetch("/chat/" + $page.params.chat, {
-          signal,
-        });
+    es = new ReconnectingEventSource(`/chat/${$page.params.chat}`);
+    es.onmessage = (event) => {
+      const message = JSON.parse(event.data);
 
-        /* get the reader for events */
-        const reader = response.body
-          ?.pipeThrough(new TextDecoderStream())
-          .getReader();
-
-        while (reader) {
-          /* read stuff indefinitely */
-          const { value, done } = await reader.read();
-          if (done) break;
-          console.log("javascript clearly running");
-          const message = JSON.parse(value);
-
-          /* add the new message */
-          if (message) {
-            message.timestamp = new Date(message.timestamp.toString());
-            messages = [message, ...messages];
-          }
-        }
-        ac.abort();
-      } catch (e) {
-        console.log("error stream closure");
+      /* add the new message */
+      if (message) {
+        message.timestamp = new Date(message.timestamp.toString());
+        messages = [message, ...messages];
       }
-    }
-    stream();
+    };
 
     onDestroy(() => {
-      ac.abort();
+      es.close();
     });
-
-    // https://kit.svelte.dev/faq#how-do-i-use-a-client-side-only-library-that-depends-on-document-or-window
-    /*     if (browser) {
-      const interval = setInterval(() => {
-        // run load function every sec lol 
-        // https://kit.svelte.dev/docs/modules#$app-navigation-invalidateall
-        invalidateAll();
-      }, 1000);
-
-      onDestroy(() => clearInterval(interval));
-    } */
   }
 </script>
 
@@ -99,14 +66,18 @@
 
 <hr />
 
-<form bind:this={formRef} use:enhance method="post" action="?/write">
-  <textarea
-    on:keypress={(e) => {
-      if (e.code == "Enter" && e.shiftKey == false) {
-        e.preventDefault();
-        formRef.submit();
-      }
-    }}
+<form
+  use:enhance={({}) => {
+    return async ({ update }) => {
+      await update(); // Call the default behavior of a form submission response.
+      inputRef.focus(); // focus the input field
+    };
+  }}
+  method="post"
+  action="?/write"
+>
+  <input
+    bind:this={inputRef}
     type="text"
     name="message"
     placeholder="message"
@@ -116,6 +87,7 @@
   {#if form?.error}
     {form.error}
   {/if}
+  <input type="submit" hidden />
 </form>
 
 <style>

@@ -9,17 +9,11 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "latest",
+		"@sveltejs/adapter-node": "latest",
 		"@sveltejs/kit": "latest",
 		"@types/cookie": "^0.5.1",
 		"mdsvex": "^0.10.6",
-		"mongodb": "^4.9.1",
 		"prisma": "^4.4.0",
-		"svelte": "^3.50.1",
-		"svelte-check": "latest",
-		"svelte-preprocess": "latest",
-		"tslib": "^2.4.0",
-		"typescript": "^4.8.3",
 		"rehype-autolink-headings": "^6.1.1",
 		"rehype-format": "^4.0.1",
 		"rehype-slug": "^5.1.0",
@@ -32,13 +26,21 @@
 		"remark-rehype": "^10.1.0",
 		"remark-sectionize": "^1.1.1",
 		"remark-slug": "^7.0.1",
-		"remark-toc": "^8.0.1"
+		"remark-toc": "^8.0.1",
+		"svelte": "^3.50.1",
+		"svelte-check": "latest",
+		"svelte-preprocess": "latest",
+		"tslib": "^2.4.0",
+		"typescript": "^4.8.3"
 	},
 	"type": "module",
 	"dependencies": {
 		"@fontsource/fira-mono": "^4.5.9",
 		"@prisma/client": "^4.4.0",
 		"prism-themes": "^1.9.0",
-		"remark": "^14.0.2"
+		"reconnecting-eventsource": "^1.6.2"
+	},
+	"engines": {
+		"node": ">=18"
 	}
 }

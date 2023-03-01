@@ -23,7 +23,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     });
   }
 
-  const response = await resolve(event);
   /* 
   
     The following line is a yolo from a security perspective.
@@ -33,6 +32,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     Read up on it here: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin
   
   */
+
+  const response = await resolve(event);
   response.headers.append("Access-Control-Allow-Origin", `*`);
   return response;
 };

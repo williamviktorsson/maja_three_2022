@@ -5,10 +5,10 @@ import { DiscFactory, Chad } from "./implementations";
 
 const factory = new DiscFactory();
 
-const william: Chad = new Chad("william");
+const student: Chad = new Chad("Chad Chaddington");
 
-const disc = factory.produce();
+const item = factory.produce();
 
-const success = william.interact(disc);
+const success = student.interact(item);
 
 console.log(success ? "item works!" : "item worksn't");

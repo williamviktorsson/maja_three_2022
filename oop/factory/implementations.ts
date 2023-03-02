@@ -27,29 +27,16 @@ export class Molder implements Machine {
   parts: Plastic[] = Array.from({ length: 100 }, () => new Plastic());
   operator: Person | undefined;
   occupy(operator: Person): boolean {
-    if (!this.operator) {
-      this.operator = operator;
-      console.log("operator seated");
-      return true;
-    } else {
-      console.log("operator seat taken");
-      return false;
-    }
+    throw Error("Unimplemented function");
+    // TODO: seat the operator if seat isnt taken.
+    // return success status based on if the operator could sit or not.
   }
   assemble(item: Disc): boolean {
-    if (!this.operator) {
-      console.log("no operator present");
-      return false;
-    }
-    console.log("Pouring plastic and stamping the mold.");
-    let pour = this.parts.pop();
-    if (pour) {
-      item.parts.push(pour);
-      return true;
-    } else {
-      console.log("out of plastic");
-      return false;
-    }
+    throw Error("Unimplemented function");
+    // TODO: proceed the assembly if an operator is available
+
+    // TODO: take the parts (if they exist in the machine) and perform the assembly
+    // Assembly means assembling the item, adding the parts to the item.
   }
 }
 
@@ -57,29 +44,10 @@ export class Painter implements Machine {
   parts: Paint[] = Array.from({ length: 100 }, () => new Paint());
   operator: Person | undefined;
   occupy(operator: Person): boolean {
-    if (!this.operator) {
-      this.operator = operator;
-      console.log("operator seated");
-      return true;
-    } else {
-      console.log("operator seat taken");
-      return false;
-    }
+    throw Error("Unimplemented function");
   }
   assemble(item: Disc): boolean {
-    if (!this.operator) {
-      console.log("no operator present");
-      return false;
-    }
-    console.log("Pouring paint and painting the disc.");
-    let paint = this.parts.pop();
-    if (paint) {
-      item.parts.push(paint);
-      return true;
-    } else {
-      console.log("out of paint");
-      return false;
-    }
+    throw Error("Unimplemented function");
   }
 }
 
@@ -87,6 +55,9 @@ export class DiscFactory implements Factory {
   assembly: Machine[] = [];
 
   constructor() {
+    // TODO: Add the machines to the assembly
+    // TODO: Occupy the machines with workers.
+
     const molder = new Molder();
     const painter = new Painter();
     molder.occupy(new Chad("billy"));
@@ -97,17 +68,8 @@ export class DiscFactory implements Factory {
 
   produce(): Item {
     let disc = new Disc();
-    let fail = false;
-    for (let index = 0; index < this.assembly.length; index++) {
-      const machine = this.assembly[index];
-      const success = machine.assemble(disc);
-      if (!success) {
-        fail = true;
-      }
-    }
-    if (!fail) {
-      disc.complete = true;
-    }
+    // TODO: pass the item through the assembly line
+    // If the assebmly doesnt fail along the way, mark the item as complete
     return disc;
   }
 }

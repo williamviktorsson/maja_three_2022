@@ -1,10 +1,10 @@
-import { FenderFactory, Chad } from "./implementations";
+import { DiscFactory, Chad, Disc } from "./implementations";
 // run program using following command:
 // npm install
 // npm run dev
 
 
-const factory = new FenderFactory();
+const factory = new DiscFactory();
 
 // TODO: Fill the factory with crates of items
 // TODO: Fill the factory with workers
@@ -12,5 +12,5 @@ const factory = new FenderFactory();
 const william: Chad = new Chad("william");
 
 
-const guitar = factory.produce();
-william.interact(guitar);
+const disc = factory.produce();
+william.interact(disc);

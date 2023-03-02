@@ -15,3 +15,11 @@ export interface Auth {
    */
   login(form: FormData): Promise<LoginResult>;
 }
+
+export interface Seeder {
+
+}
+
+export interface Encrypter {
+  hash(password:string,salt:string):string;
+}

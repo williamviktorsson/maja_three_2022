@@ -1,4 +1,3 @@
-import { Interface } from "readline";
 
 export interface Factory {
   assembly: Machine[]; // an item is passed through an assembly line to be created

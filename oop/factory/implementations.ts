@@ -1,130 +1,118 @@
-import { Crate, Factory, Item, Machine, Part, Person } from "./interfaces";
+import { Factory, Item, Machine, Part, Person } from "./interfaces";
 
 export class Chad implements Person {
   name: string;
-  right_hand: Part | undefined;
-  left_hand: Item | undefined;
 
   constructor(name: string) {
     this.name = name;
   }
 
-  carry(object: Part | Item): boolean {
-    if ("name" in object) {
-      this.right_hand = object;
-    } else {
-      this.left_hand = object;
-    }
-    return true;
-  }
-
   interact(item: Item): boolean {
+    console.log("im about to try this: " + item.constructor.name);
     return item.use();
   }
 }
 
 export class Plastic implements Part {
+  description: string = "hard plastic";
   name: string = "k3";
 }
 
 export class Paint implements Part {
+  description: string = "nice finish theme";
   name: string = "moomin";
 }
 
-export class PlasticBox implements Crate {
-  parts: Part[] = Array.from({ length: 50 }, () => new Plastic());
-  take(): Part | undefined {
-    return this.parts.pop();
-  }
-}
-export class PaintBox implements Crate {
-  parts: Part[] = Array.from({ length: 50 }, () => new Paint());
-  take(): Part | undefined {
-    return this.parts.pop();
-  }
-}
-
-console.log(new PlasticBox());
-
-export class MoldMachine implements Machine {
+export class Molder implements Machine {
+  parts: Plastic[] = Array.from({ length: 100 }, () => new Plastic());
   operator: Person | undefined;
-  parts: Plastic[] = [];
-  occupy(operator: Person) {
-    this.operator = operator;
-  }
-  assemble(item: Disc): Disc {
+  occupy(operator: Person): boolean {
     if (!this.operator) {
-      throw Error("operator MIA");
+      this.operator = operator;
+      console.log("operator seated");
+      return true;
+    } else {
+      console.log("operator seat taken");
+      return false;
+    }
+  }
+  assemble(item: Disc): boolean {
+    if (!this.operator) {
+      console.log("no operator present");
+      return false;
     }
     console.log("Pouring plastic and stamping the mold.");
     let pour = this.parts.pop();
     if (pour) {
       item.parts.push(pour);
+      return true;
     } else {
-      throw Error("out of plastic");
+      console.log("out of plastic");
+      return false;
     }
-    return item;
   }
+}
 
-  fill(part: Plastic): boolean {
-    this.parts.push(part);
-    return true;
+export class Painter implements Machine {
+  parts: Paint[] = Array.from({ length: 100 }, () => new Paint());
+  operator: Person | undefined;
+  occupy(operator: Person): boolean {
+    if (!this.operator) {
+      this.operator = operator;
+      console.log("operator seated");
+      return true;
+    } else {
+      console.log("operator seat taken");
+      return false;
+    }
+  }
+  assemble(item: Disc): boolean {
+    if (!this.operator) {
+      console.log("no operator present");
+      return false;
+    }
+    console.log("Pouring paint and painting the disc.");
+    let paint = this.parts.pop();
+    if (paint) {
+      item.parts.push(paint);
+      return true;
+    } else {
+      console.log("out of paint");
+      return false;
+    }
   }
 }
 
 export class DiscFactory implements Factory {
-  setup(): boolean {
-    // TODO : enter some workers
-    /// TODO: for each machine, occupy the machine
-    // for each machine, fill with required items.
-    this.receive(new PaintBox());
-    this.receive(new PlasticBox());
-    this.assembly.push(new MoldMachine());
-    return true;
-  }
   assembly: Machine[] = [];
-  crates: Crate[] = [];
-  workers: Person[] = [];
-  worker_capacity = 50;
-  crate_capacity = 20;
-  enter(worker: Person): boolean {
-    throw new Error("Method not implemented.");
+
+  constructor() {
+    const molder = new Molder();
+    const painter = new Painter();
+    molder.occupy(new Chad("billy"));
+    painter.occupy(new Chad("willy"));
+    this.assembly.push(molder);
+    this.assembly.push(painter);
   }
-  receive(crate: Crate): boolean {
-    throw new Error("Method not implemented.");
-  }
+
   produce(): Item {
     let disc = new Disc();
-    let carryer: Person = {
-      name: "",
-      right_hand: undefined,
-      left_hand: undefined,
-      carry: function (object: Part | Item): boolean {
-        this.right_hand = object as Part;
-        return true;
-      },
-      interact: function (item: Item): boolean {
-        throw new Error("Function not implemented.");
-      },
-    };
-
-    carryer.carry(disc);
-
+    let fail = false;
     for (let index = 0; index < this.assembly.length; index++) {
       const machine = this.assembly[index];
-      // TODO: did we run out of items in the machine?
-      // if so, make a worker, go and carry some parts from a crate.
-      let temp = machine.assemble(carryer.left_hand!);
-      carryer.carry(temp);
+      const success = machine.assemble(disc);
+      if (!success) {
+        fail = true;
+      }
     }
-    return new Disc();
+    if (!fail) {
+      disc.complete = true;
+    }
+    return disc;
   }
 }
 
 export class Disc implements Item {
-  isItem(object: any): object is Item {
-    throw new Error("Method not implemented.");
-  }
   parts: Part[] = [];
   complete: boolean = false;
   use(): boolean {

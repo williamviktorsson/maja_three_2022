@@ -1,40 +1,28 @@
+import { Interface } from "readline";
+
 export interface Factory {
-  assembly: Machine[];
-  crates: Crate[];
-  workers: Person[];
-  enter(worker: Person): boolean; // a worker starts its shift
-  receive(crate: Crate): boolean; // a crate is delivered to the factory
-  produce(): Item; // Create an empty item, then pass it through each machine to complete it.
-  setup(): boolean; // assign workers to the assembly line and take items from crates to the assembly line
+  assembly: Machine[]; // an item is passed through an assembly line to be created
+  produce(): Item | undefined; // Create an empty item, then pass it through each machine to complete it.
 }
 
 export interface Item {
   parts: Part[]; // an item consists of X parts
-  complete: boolean;
-  use(): boolean;
+  complete: boolean; // an item is incomplete until all parts have been added
+  use(): boolean; // returns true if the item could be used (is complete)
 }
 
 export interface Part {
   name: string;
+  description: string;
 }
 
 export interface Machine {
-  operator: Person | undefined;
-  parts: Part[];
-  occupy(operator: Person);
-  assemble(item: Item): Item; // adds parts to the item.
-  fill(part: Part): boolean; // fills the machine with parts.
-}
-
-export interface Crate {
-  parts: Part[];
-  take(): Part | undefined; 
+  parts: Part[]; // the machine has the parts that will be added to the Item
+  occupy(operator: Person): boolean; // an operator needs to be present at the machine to assemble items
+  assemble(item: Item): boolean; // adds parts to the item, return success status
 }
 
 export interface Person {
   name: string;
-  right_hand: Part | undefined;
-  left_hand: Item | undefined;
-  carry(object: Item | Part): boolean; // a person can carry something if hands are available.
   interact(item: Item): boolean; // a person should be able to use a completed Item.
 }

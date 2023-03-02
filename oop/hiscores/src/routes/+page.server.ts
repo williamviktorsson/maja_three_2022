@@ -4,6 +4,8 @@ import { JumpPlayer } from "$lib/do_not_modify/player";
 import type {
   CreateLeaderboardRequest,
   CreateLeaderboardResponse,
+  DeleteLeaderboardRequest,
+  DeleteLeaderboardResponse,
   GetLeaderboardsRequest,
   GetLeaderboardsResponse,
   GetRanksForPlayerRequest,
@@ -56,6 +58,45 @@ async function create_leaderboard(
     });
 
   return "CREATELEADERBOARD - " + response;
+}
+
+async function delete_leaderboard(
+  host: string,
+  implementation: string,
+  id: string
+) {
+  let request: DeleteLeaderboardRequest = {
+    leaderboard_id: id,
+  };
+
+  const response = await fetch(
+    `http://${host}/api/${implementation}/leaderboard`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+      body: JSON.stringify(request),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data) throw null;
+
+      let response: DeleteLeaderboardResponse = data;
+
+      var jsonPretty = JSON.stringify(response, null, 2);
+      console.log(jsonPretty);
+      return jsonPretty;
+    })
+    .catch((error) => {
+      console.log(error);
+      var jsonPretty = JSON.stringify(error, null, 2);
+
+      return jsonPretty;
+    });
+
+  return "DELETELEADERBOARD - " + response;
 }
 
 async function get_leaderboards(host: string, implementation: string) {
@@ -286,6 +327,8 @@ export const actions: Actions = {
         await get_scores_from_leaderboard(host, implementation, "dompi"),
 
         await get_ranks_for_player(host, implementation, "willid"),
+        await delete_leaderboard(host, implementation, "willi"),
+        await delete_leaderboard(host, implementation, "dompi"),
       ];
       results[implementation] = testresults;
     }

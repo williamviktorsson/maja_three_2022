@@ -1,6 +1,6 @@
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { database } from "$lib/database";
+import { database } from "$lib/ssr";
 
 export const load: PageServerLoad = async ({ locals }) => {
   const chats = await database.chat.findMany();

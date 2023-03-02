@@ -1,10 +1,31 @@
-import type { Auth, LoginResult } from "$lib/interfaces/auth";
+import type {
+  Auth,
+  Encrypter,
+  LoginResult,
+  UIDRandomizer,
+} from "$lib/interfaces/auth";
 import { database } from "$lib/ssr";
 import * as crypto from "crypto";
 
+export class AdvancedUIDRandomizer implements UIDRandomizer {
+  generate_unique_id(): string {
+    return crypto.randomUUID();
+  }
+}
+
+export class AdvancedEncrypter implements Encrypter {
+  hash(password: string, salt: string): string {
+    return crypto
+      .pbkdf2Sync(password, salt, 1000, 64, "sha512")
+      .toString("hex");
+  }
+}
+
 export class SQLiteAuth implements Auth {
+  randomizer: UIDRandomizer = new AdvancedUIDRandomizer();
+  encrypter: Encrypter = new AdvancedEncrypter();
+
   async login(form: FormData): Promise<LoginResult> {
-    
     const username = form.get("username")?.toString();
     const password = form.get("password")?.toString();
 
@@ -34,9 +55,7 @@ export class SQLiteAuth implements Auth {
 
       const { salt, hash } = result;
 
-      const newhash = crypto
-        .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-        .toString("hex");
+      const newhash = this.encrypter.hash(password, salt);
 
       if (newhash != hash) {
         return {
@@ -47,7 +66,7 @@ export class SQLiteAuth implements Auth {
         };
       }
 
-      const session = crypto.randomUUID();
+      const session = this.randomizer.generate_unique_id();
 
       const update = await database.user.update({
         where: { id: result.id },
@@ -56,7 +75,7 @@ export class SQLiteAuth implements Auth {
         },
       });
 
-      return { success: { session:update.session } };
+      return { success: { session: update.session } };
     } catch (e) {
       console.log(e);
       return {

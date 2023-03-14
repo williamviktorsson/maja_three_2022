@@ -1,5 +1,5 @@
 import { Sorter } from "./interfaces";
-
+const fs = require("fs");
 export class DefaultSorter implements Sorter {
   timed_sort(array: number[]): { array: number[]; milliseconds: number } {
     let start = Date.now();
@@ -8,8 +8,8 @@ export class DefaultSorter implements Sorter {
     return { array: temp, milliseconds: end - start };
   }
   sort(array: number[]): number[] {
-    // TODO: use the default array sort method
-    throw new Error("Method not implemented.");
+    // TODO: complete the default sort
+    throw Error("Method not yet implemented");
   }
   shuffle(array: number[]): number[] {
     // https://stackoverflow.com/a/2450976
@@ -39,7 +39,8 @@ export class DefaultSorterTimeLogger extends DefaultSorter {
     milliseconds: number;
   } {
     let temp = super.timed_sort(array);
-    // TODO: log the sorting time to console
+    // TODO: log the elapsed time to console
+    throw Error("Method not yet implemented");
     return temp;
   }
 }
@@ -47,34 +48,31 @@ export class DefaultSorterTimeLogger extends DefaultSorter {
 export class BubbleSorter extends DefaultSorterTimeLogger {
   //https://rajat-m.medium.com/implement-5-sorting-algorithms-using-javascript-63c5a917e811
   sort(array: number[]): number[] {
-    // TODO: implement bubblesort
-    throw new Error("Method not implemented.");
+    // TODO: implement bubblesort, check at the link
+    throw Error("Method not yet implemented");
   }
 }
 
 export class QuickSorter extends DefaultSorterTimeLogger {
   //https://rajat-m.medium.com/implement-5-sorting-algorithms-using-javascript-63c5a917e811
   sort(array: number[]): number[] {
-    // TODO: implement quicksort
-    throw new Error("Method not implemented.");
-  }
-}
-
-export class BogoSorter extends DefaultSorterTimeLogger {
-  sort(array: number[]): number[] {
-    // TODO: implement Bogosort
-    throw new Error("Method not implemented.");
+    // TODO: implement quicksort, check the link
+    throw Error("Method not yet implemented");
   }
 }
 
 // this sorter does the parent sort and also dumps the result to file
-export class BogoSorterTimeFileDumper extends DefaultSorterTimeLogger {
+export class QuickSorterTimeFileDumper extends QuickSorter {
   override timed_sort(array: number[]): {
     array: number[];
     milliseconds: number;
   } {
-    // TODO: log the sorting time to file
+    let temp = super.timed_sort(array);
+    // TODO: log the time to a file. use "./log.txt" as filename
+    // make sure that you are logging a string and not a number
     // https://nodejs.dev/en/learn/writing-files-with-nodejs/
-    throw new Error("Method not implemented.");
+    throw Error("Method not yet implemented");
+
+    return temp;
   }
 }

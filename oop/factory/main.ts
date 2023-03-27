@@ -9,6 +9,10 @@ const william: Chad = new Chad("william");
 
 const disc = factory.produce();
 
-const success = william.interact(disc);
+let success = false;
+
+if (disc) {
+  success = william.interact(disc);
+}
 
 console.log(success ? "item works!" : "item worksn't");

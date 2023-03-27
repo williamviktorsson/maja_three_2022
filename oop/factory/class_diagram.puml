@@ -1,0 +1,99 @@
+@startuml
+
+abstract class Part {
+  + name: string
+  + description: string
+}
+
+abstract class SerialNumber {
+  + manufacturer: string
+  + model: string
+  + productionDate: Date
+  + serialNumber: string
+}
+
+interface Machine {
+  + serialNumber: SerialNumber
+  + parts: Part[]
+  + occupy(operator: Person): boolean
+  + assemble(item: Item): boolean
+}
+
+interface Item {
+  + parts: Part[]
+  + complete: boolean
+  + use(): boolean
+}
+
+interface Factory {
+  + assembly: Machine[]
+  + produce(): Item
+}
+
+interface Person {
+  + name: string
+  + interact(item: Item): boolean
+}
+
+class DiscCraftSerialNumber {
+  + manufacturer: string
+  + model: string
+  + productionDate: Date
+  + serialNumber: string
+}
+
+class DiscCraftMachine {
+  + serialNumber: DiscCraftSerialNumber
+  + parts: Part[]
+  + operator: Person | undefined
+  + occupy(operator: Person): boolean
+  + assemble(item: Disc): boolean
+}
+
+class Disc {
+  + parts: Part[]
+  + complete: boolean = false
+  + use(): boolean
+}
+
+class Chad {
+  + name: string
+  + interact(item: Item): boolean
+}
+
+class Plastic {
+  + description: string = "hard plastic"
+  + name: string = "k3"
+}
+
+class Paint {
+  + description: string = "nice finish theme"
+  + name: string = "moomin"
+}
+
+class DiscFactory {
+  + assembly: Machine[] = []
+
+  + produce(): Item
+}
+
+
+Part o-- DiscCraftMachine : is part of (aggregation)
+SerialNumber *-- Machine : assigned to (composition)
+
+DiscCraftSerialNumber *-- DiscCraftMachine : assigned to (composition)
+Machine o-- DiscFactory : is part of (aggregation)
+Item --o Part : is part of (aggregation)
+Person ..> Item : interact (dependency)
+Part <|-- Plastic: extends (inheritance)
+Part <|-- Paint: extends (inheritance)
+Disc ..|> Item: implements (interface implementation)
+Chad ..|> Person: implements (interface implementation)
+DiscFactory ..|> Factory: implements (interface implementation)
+DiscCraftMachine ..|> Machine: implements (interface implementation)
+DiscCraftSerialNumber --|> SerialNumber: extends (inheritance)
+
+
+
+
+@enduml

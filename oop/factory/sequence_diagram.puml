@@ -1,0 +1,13 @@
+@startuml
+actor User
+User -> DiscFactory: produce()
+DiscFactory -> Disc: create new Disc instance
+DiscFactory -> DiscCraftMachine: assemble(Disc)
+DiscCraftMachine -> Plastic: pop one Plastic
+Plastic -> Disc: add Plastic
+DiscCraftMachine -> Paint: pop one Paint
+Paint -> Disc: add Paint
+DiscCraftMachine -> Disc: return true
+DiscFactory -> Disc: complete = true
+DiscFactory -> User: return completed Disc instance
+@enduml

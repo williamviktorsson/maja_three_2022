@@ -1,4 +1,11 @@
-import { Factory, Item, Machine, Part, Person } from "./interfaces";
+import {
+  Factory,
+  Item,
+  Machine,
+  Part,
+  Person,
+  SerialNumber,
+} from "./interfaces";
 
 export class Chad implements Person {
   name: string;
@@ -13,19 +20,33 @@ export class Chad implements Person {
   }
 }
 
-export class Plastic implements Part {
-  description: string = "hard plastic";
-  name: string = "k3";
+export class Plastic extends Part {
+  constructor() {
+    super("hard plastic", "k3");
+  }
 }
 
-export class Paint implements Part {
-  description: string = "nice finish theme";
-  name: string = "moomin";
+export class Paint extends Part {
+  constructor() {
+    super("nice finish theme", "moomin");
+  }
 }
 
-export class Molder implements Machine {
-  parts: Plastic[] = Array.from({ length: 100 }, () => new Plastic());
+export class DiscCraftSerialNumber extends SerialNumber {
+  constructor(serialNumber: string) {
+    super("DiscCraft", "XYZ", new Date(), serialNumber);
+  }
+}
+
+export class DiscCraftMachine implements Machine {
+  serialNumber: DiscCraftSerialNumber;
+  parts: Part[] = Array.from({ length: 100 }, () => new Plastic());
   operator: Person | undefined;
+
+  constructor(serialNumber: string) {
+    this.serialNumber = new DiscCraftSerialNumber(serialNumber);
+  }
+
   occupy(operator: Person): boolean {
     if (!this.operator) {
       this.operator = operator;
@@ -36,7 +57,32 @@ export class Molder implements Machine {
       return false;
     }
   }
+
   assemble(item: Disc): boolean {
+    if (!this.operator) {
+      console.log("no operator present");
+      return false;
+    }
+    console.log("Doing some fancy stuff with plastic");
+    let pour = this.parts.pop();
+    if (pour) {
+      item.parts.push(pour);
+      return true;
+    } else {
+      console.log("out of plastic");
+      return false;
+    }
+  }
+}
+
+export class Molder extends DiscCraftMachine {
+  constructor() {
+    super("molder");
+  }
+
+  parts: Part[] = Array.from({ length: 100 }, () => new Plastic());
+
+  assemble(item: Item): boolean {
     if (!this.operator) {
       console.log("no operator present");
       return false;
@@ -53,20 +99,12 @@ export class Molder implements Machine {
   }
 }
 
-export class Painter implements Machine {
-  parts: Paint[] = Array.from({ length: 100 }, () => new Paint());
-  operator: Person | undefined;
-  occupy(operator: Person): boolean {
-    if (!this.operator) {
-      this.operator = operator;
-      console.log("operator seated");
-      return true;
-    } else {
-      console.log("operator seat taken");
-      return false;
-    }
+export class Painter extends DiscCraftMachine {
+  parts: Part[] = Array.from({ length: 100 }, () => new Paint());
+  constructor() {
+    super("painter");
   }
-  assemble(item: Disc): boolean {
+  assemble(item: Item): boolean {
     if (!this.operator) {
       console.log("no operator present");
       return false;
@@ -87,16 +125,19 @@ export class DiscFactory implements Factory {
   assembly: Machine[] = [];
 
   constructor() {
+    const machine = new DiscCraftMachine("123");
     const molder = new Molder();
     const painter = new Painter();
+    machine.occupy(new Chad("gilly"));
     molder.occupy(new Chad("billy"));
     painter.occupy(new Chad("willy"));
+    this.assembly.push(machine);
     this.assembly.push(molder);
     this.assembly.push(painter);
   }
 
-  produce(): Item {
-    let disc = new Disc();
+  produce(): Item | undefined {
+    let disc: Item | undefined = new Disc();
     let fail = false;
     for (let index = 0; index < this.assembly.length; index++) {
       const machine = this.assembly[index];
@@ -107,6 +148,8 @@ export class DiscFactory implements Factory {
     }
     if (!fail) {
       disc.complete = true;
+    } else {
+      disc = undefined;
     }
     return disc;
   }
